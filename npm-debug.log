@@ -1,0 +1,40 @@
+info it worked if it ends with ok
+verbose cli [ 'node', '/usr/bin/npm', 'start' ]
+info using npm@1.1.4
+info using node@v0.6.12
+verbose config file /home/ritesh/.npmrc
+verbose config file /usr/etc/npmrc
+verbose config file /usr/share/npm/npmrc
+verbose caching /home/ritesh/WeatherForecast/WeatherForecast/package.json
+verbose loadDefaults WeatherForecast@0.0.1
+verbose run-script [ 'prestart', 'start', 'poststart' ]
+info prestart WeatherForecast@0.0.1
+info start WeatherForecast@0.0.1
+verbose unsafe-perm in lifecycle true
+silly exec sh "-c" "node ./bin/www"
+silly spawning [ 'sh',
+silly spawning   [ '-c', 'node ./bin/www' ],
+silly spawning   '/home/ritesh/WeatherForecast/WeatherForecast' ]
+info WeatherForecast@0.0.1 Failed to exec start script
+ERR! WeatherForecast@0.0.1 start: `node ./bin/www`
+ERR! `sh "-c" "node ./bin/www"` failed with 1
+ERR! 
+ERR! Failed at the WeatherForecast@0.0.1 start script.
+ERR! This is most likely a problem with the WeatherForecast package,
+ERR! not with npm itself.
+ERR! Tell the author that this fails on your system:
+ERR!     node ./bin/www
+ERR! You can get their info via:
+ERR!     npm owner ls WeatherForecast
+ERR! There is likely additional logging output above.
+ERR! 
+ERR! System Linux 3.11.0-26-generic
+ERR! command "node" "/usr/bin/npm" "start"
+ERR! cwd /home/ritesh/WeatherForecast/WeatherForecast
+ERR! node -v v0.6.12
+ERR! npm -v 1.1.4
+ERR! code ELIFECYCLE
+ERR! message WeatherForecast@0.0.1 start: `node ./bin/www`
+ERR! message `sh "-c" "node ./bin/www"` failed with 1
+ERR! errno {}
+verbose exit [ 1, true ]
