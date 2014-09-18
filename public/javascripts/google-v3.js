@@ -27,6 +27,8 @@ function init() {
             .transform('EPSG:4326', 'EPSG:3857'),
         zoom: 5
     });
+    console.log('zoom level is');
+    console.log(map.getZoom());
 var StyleMap = new OpenLayers.Style({
             fontColor: "blue",
             fontSize: "20px",

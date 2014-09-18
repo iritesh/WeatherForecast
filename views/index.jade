@@ -1,42 +1,77 @@
 extends layout
 
 block content
-  body(style='background-color:#5DBCD2;margin:0px')
-    script(type="text/ng-template" id="customTemplate.html")
-      a
-        img(ng-src="http://upload.wikimedia.org/wikipedia/commons/thumb/{{match.model.flag}}" width="16")
-        span(bind-html-unsafe="match.label | typeaheadHighlight:query")
-    div.sidebar(ng-controller ='sideContoller',ng-class="{'slide-out':boolChangeClass}")
-      button(id='sidebutton',ng-class='class',style='float:right;background-color:#FF8300;outline:none;border:0px;',ng-click='clickHandler()')
-      ul.list-group(style='list-style-type:none;clear:both;')
-        li.list-group-item(ng-repeat='city in cities',ng-style='myStyle',ng-mouseover='hello1()',ng-mouseleave='hello2()')
-          a.listlink(href='#',ng-click='hello(city)') {{city}}
-          a.glyphicon.glyphicon-remove-sign(style='float:right;margin:right:5px;')
-        li.list-group-item(style='border:0px;') 
-          a.glyphicon.glyphicon-plus(ng-hide='addNew',ng-click='showForm()')
-          span(ng-hide='addNew') Add New City
-          input(ng-show='addNew',type="text",ng-model="asyncSelected",placeholder="Locations",typeahead="address for address in getLocation($viewValue)",typeahead-loading="loadingLocations",class="form-control",style='width:100%;',ng-enter='myFunc(this)') 
-    div.container-fluid( ng-controller="TypeaheadCtrl",style='margin-left:210px')
-      div(style='text-align:left;float:left;') {{selectedDay.date}}
-        img(ng-src='http://openweathermap.org/img/w/{{selectedDay.weather[0].icon}}.png',style='width:70px;height:70px;')
-        table.table(style='width:20%')
+  body(style='background-color:#5DBCD2;margin:0px;')
+    script#customTemplate(type="text/ng-template")
+      div.linkkk
+        a(style='word-wrap:break-word;') {{match.model.name}}
+    div.alert.alert-warning.sample-show-hide(style='z-index:2;',ng-init='fCityAdded=false;locRes=false;isSidebar=false;isMessage=false;',ng-show='showMessage()') {{errMsg}}
+    div.sidebar.sample-show-hide(sidebar-handler,style='z-index:2;position:fixed;',ng-show='showSidebar()')
+      button(id='sidebutton',ng-class='class',style='float:right;background-color:#FF8300;outline:none;border:0px;',ng-click='clickHandler1()')
+      ul.list-group(ng-controller='manageCitiesCont',style='list-style-type:none;clear:both;border-radius:0;')
+        li.list-group-item(ng-repeat='city in cities',ng-style='myStyle',ng-mouseover='hoverHandler()',ng-mouseleave='leaveHandler()',city-id='{{city.Id}}',style='background-color: #FF8300;border:0px;margin-right:15px;margin-left:5px;')
+          a.listlink(href='#',ng-click='clickHandler()',style='text-decoration:none') {{city.city}}
+          a.glyphicon.glyphicon-remove-sign(href='#',style='float:right;margin-right:2px;visibility:hidden',ng-click='crossHandler()')
+        li.list-group-item(style='border:0px;margin-right:15px;margin-left:5px;') 
+          input#locInput(type="text",ng-model="newCity",placeholder="Locations",typeahead="address.name for address in getLocations($viewValue)",typeahead-loading="loadingLocations",typeahead-on-select='selectionFunc($item);',class="form-control",ng-enter='addCity(this)',typeahead-template-url='customTemplate',style='display:none;width:80%;') 
+          a.glyphicon.glyphicon-remove(href='#',style='display:none;margin-left:5px;float:right;',ng-click='removeInput();')
+          a.glyphicon.glyphicon-plus(href='#',ng-click='clickPlus();',style='text-decoration:none;')
+          span#notAvail(style='display:none;') {{message}}
+          span#addLabel Add New City
+    div.container-fluid.sample-show-hide1( style='margin-left:210px;',slide-handler)
+      div#container-fluid(style='overflow:hidden;clear:both;',ng-show='fCityAdded')
+        ul(style='list-style-type:none;margin:0;padding:0;width:25000px',ng-mouseleave='releaseHandler()',ng-mouseenter='enterHandler();')
+          li(ng-repeat="location in forecasts",ng-mouseover="hoverHandler1(location);",ng-mouseleave="leaveHandler1(location);",style='position:relative;left:0px;float:left;') 
+            div(ng-style='{zoom:zoom1}')
+              img(ng-src='http://openweathermap.org/img/w/{{location.weather[0].icon}}.png',style='display:block;width:56px;height:56px;',draggable='false',ng-click="clickHandler2(location)")
+              {{location.date}}
+      div#selectedDay(style='text-align:center;',ng-show='fCityAdded') 
+        div {{selectedDay.date}}
+          img(ng-src='http://openweathermap.org/img/w/{{selectedDay.weather[0].icon}}.png',style='width:70px;height:70px;')
+        table.table(style='width:50%;float:left;')
+            tr
+              td(style='float:right;') Day
+              td {{selectedDay.temp.day }}&nbsp;
+                sup o
+                |C  
+            tr
+              td(style='float:right;') Night
+              td {{selectedDay.temp.night}}&nbsp;  
+                sup o
+                |C
+             tr
+              td(style='float:right;') Morning
+              td {{selectedDay.temp.morn}}&nbsp;
+                sup o
+                |C
+            tr
+              td(style='float:right;') Evening
+              td {{selectedDay.temp.eve}}&nbsp;
+                sup o
+                |C  
+            tr
+              td(style='float:right;') Low
+              td {{selectedDay.temp.min }}&nbsp;
+                sup o
+                |C
+            tr
+              td(style='float:right;') High
+              td {{selectedDay.temp.max}}&nbsp;
+                sup o
+                |C  
+        table.table(style='width:50%;float:right;')
           tbody
             tr
-              td Low
-              td {{selectedDay.temp.min}}
+              td(style='float:right;') Pressure
+              td {{selectedDay.pressure}}&nbsp;mb
             tr
-              td High
-              td {{selectedDay.temp.max}}  
+              td(style='float:right;') Humidity
+              td {{selectedDay.humidity}}%        
             tr
-              td Pressure
-              td {{selectedDay.pressure}}  
+              td(style='float:right;') Clouds
+              td {{selectedDay.clouds}}%
             tr
-              td Humidity
-              td {{selectedDay.humidity}} 
-      div#map.smallmap(style='float:left;',map-directive)              
-      div#container-fluid(style='overflow:hidden;clear:both;')
-        ul(style='list-style-type:none;margin:0;padding:0;width:25000px',slide-controller,ng-mouseleave='releaseHandler()')
-          li(ng-repeat="location in forecasts",ng-mouseover='dummyFunc(location)',ng-mouseleave='dummyFunc1()',ng-click='',style='position:relative;left:0px;float:left;') 
-            div(ng-style='{zoom:zoom1}')
-              img(ng-src='http://openweathermap.org/img/w/{{location.weather[0].icon}}.png',style='display:block;width:56px;height:56px;',draggable='false')
-              {{location.date}}
+              td(style='float:right;') Wind
+              td {{selectedDay.speed}}&nbsp;Km/hr    
+      div#map.smallmap(style='float:left;width:100%;visibility:hidden;',map-directive)
+        

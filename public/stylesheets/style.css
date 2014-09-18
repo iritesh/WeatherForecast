@@ -5,9 +5,34 @@ body {
   margin:0px;
 }
 
+ul.dropdown-menu li:hover{
+    background-color: #800080;
+
+}
+ul.dropdown-menu {
+    width:80%;
+}
+div.ps-scrollbar-y{
+    background-color :grey;
+}
+
 a {
   color: #00B7FF;
 }
+.scroller {
+                white-space: pre-line;
+                height: 720px;
+                width: 480px;
+                overflow-y: hidden;
+                position: relative;
+            }
+
+.main {
+
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box; }
 
 .sidebar {
     -moz-transition: left .1s;
@@ -22,6 +47,7 @@ a {
     bottom: 0px;
     left: 0px;
  height:100%;
+overflow: hidden;
 }
 
 .slide-out {
@@ -31,6 +57,47 @@ a {
     transition: left 1s;
     left: 0px;
     
+}
+
+.sample-show-hide {
+ 
+  -webkit-transition:all linear 1s;
+  transition:all linear 1s;
+
+}
+
+.sample-show-hide.ng-hide {
+  opacity:0;
+}
+
+.sample-show-hide.ng-show {
+    opacity:1;
+}
+
+.sample-show-hide1{
+ 
+ -webkit-transition:all linear 3s;
+  transition:all linear 3s;
+
+}
+
+.sample-show-hide1.ng-show {
+    opacity:1;
+}
+
+.sample-show-hide1.ng-hide {
+  opacity:0;
+}
+
+/*div.alert{
+
+
+}
+*/
+
+@keyframes myfirst {
+    from {: red;}
+    to {background: yellow;}
 }
 
 div {
@@ -43,19 +110,16 @@ li.list-group-item{
   
 }
 
-.sidebar li.list-group-item:hover{
-background-color:#FFA500;
-
-}
-
 .sidebar li.list-group-item{
 border : 0px;
 
 }
 
 .sidebar li.list-group-item a{
+
 text-decoration: none;
 color:#000000;
+
 }
 
 table.table>tbody>tr>td {
@@ -143,10 +207,10 @@ h6 {
  * Map Examples Specific
  */
 .smallmap {
-    width: 512px;
     height: 256px;
     border: 1px solid #ccc;
 }
+
 #tags {
     display: none;
 }
@@ -192,9 +256,9 @@ h6 {
     }
 }
 
-.sidebar ul li:first-child{
+/*.sidebar ul li:first-child{
     background-color: #FFA500;
-}
+}*/
 
 @media only screen and (orientation: landscape) and (max-width: 600px) {
     #shortdesc {
@@ -221,6 +285,21 @@ body {
 #sidebutton{
   display:none;
     }
+
+.olControlButtonItemActive {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 22px;
+    height: 22px;
+}
+
+.olControlPanel {
+    width: 50px;
+    height: 50px;
+    right: 0px;
+}
 
 
 
