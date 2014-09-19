@@ -4,7 +4,7 @@ myApp.directive('mapDirective', function($http,$rootScope,$interval,$timeout) {
         restrict: 'EA',
         link: function(scope, ele, attrs, ctrl) {
 
-            var sideScope = angular.element(Sizzle("div.sidebar")[0]).scope();
+            var sideScope = angular.element($("div.sidebar")[0]).scope();
             var map = new OpenLayers.Map('map', {
                 projection: 'EPSG:3857',
                 layers: [
@@ -77,12 +77,12 @@ var stations = new OpenLayers.Layer.Vector.OWMStations("Stations",{styleMap :Sty
 
            sideScope.$watch('selectedCity', function() {
                                
-                if (Sizzle('.olForeignContainer').length > 0) {
-                    var myNode = Sizzle('div#map')[0];
+                if ($('.olForeignContainer').length > 0) {
+                    var myNode = $('div#map')[0];
                             while (myNode.firstChild)
                                 myNode.removeChild(myNode.firstChild);
                         }
-jQuery('div#map').append("<a class='glyphicon.glyphicon-fullscreen' style='position:absolute;left:0px;top:0px' href='#'></a>");
+$('div#map').append("<a class='glyphicon.glyphicon-fullscreen' style='position:absolute;left:0px;top:0px' href='#'></a>");
                 var selectedCity = sideScope.selectedCity;
                 zb = new OpenLayers.Control.ZoomBox(
                 {title:"Zoom box: Selecting it you can zoom on an area by clicking and dragging."});
@@ -91,20 +91,20 @@ jQuery('div#map').append("<a class='glyphicon.glyphicon-fullscreen' style='posit
             }
             var button = new OpenLayers.Control.Button({autoActivate: true,
     displayClass: "olControlButton", trigger: function(){console.log('coming here');
-if(jQuery('.olControlButtonItemActive').hasClass('glyphicon-fullscreen'))
-{jQuery('.olControlButtonItemActive').removeClass('glyphicon-fullscreen').addClass('glyphicon-resize-small');
-jQuery('div#selectedDay').css('display','none');
-jQuery('div#container-fluid').css('display','none');
-jQuery('div#map').css('position','absolute');
-jQuery('div#map').css('height','100%');
-jQuery('div#map').css('width',(jQuery('div.container-fluid').width())-10);
+if($('.olControlButtonItemActive').hasClass('glyphicon-fullscreen'))
+{$('.olControlButtonItemActive').removeClass('glyphicon-fullscreen').addClass('glyphicon-resize-small');
+$('div#selectedDay').css('display','none');
+$('div#container-fluid').css('display','none');
+$('div#map').css('position','absolute');
+$('div#map').css('height','100%');
+$('div#map').css('width',($('div.container-fluid').width())-10);
 }else {
-    jQuery('div#selectedDay').css('display' , 'block');
+    $('div#selectedDay').css('display' , 'block');
 $('div#container-fluid').css('display','block');
 $('div#map').css('position','static');
 $('div#map').css('height','256px');
 
-    jQuery('.olControlButtonItemActive').removeClass('glyphicon-resize-small').addClass('glyphicon-fullscreen');
+    $('.olControlButtonItemActive').removeClass('glyphicon-resize-small').addClass('glyphicon-fullscreen');
 
   }
 
@@ -116,7 +116,7 @@ $timeout(function(){
     var panel = new OpenLayers.Control.Panel({defaultControl:button});
 panel.addControls([button]);
 map.addControl(panel);
-jQuery('.olControlButtonItemActive').addClass('glyphicon glyphicon-fullscreen');
+$('.olControlButtonItemActive').addClass('glyphicon glyphicon-fullscreen');
 markers.clearMarkers();    
                     
                             map.setCenter(new OpenLayers.LonLat(sideScope.selectedCity.lon, sideScope.selectedCity.lat)

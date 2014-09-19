@@ -5,13 +5,20 @@ body {
   margin:0px;
 }
 
-ul.dropdown-menu li:hover{
-    background-color: #800080;
+div.sidebar ul.list-group li.hovereffect:hover{
+
+ background-color : #FFA500;
 
 }
+
+ul.dropdown-menu li:hover{
+    background-color: #800080;
+}
+
 ul.dropdown-menu {
     width:80%;
 }
+
 div.ps-scrollbar-y{
     background-color :grey;
 }
@@ -20,9 +27,6 @@ a {
   color: #00B7FF;
 }
 .scroller {
-                white-space: pre-line;
-                height: 720px;
-                width: 480px;
                 overflow-y: hidden;
                 position: relative;
             }

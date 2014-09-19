@@ -3,15 +3,15 @@ extends layout
 block content
   body(style='background-color:#5DBCD2;margin:0px;')
     script#customTemplate(type="text/ng-template")
-      div.linkkk
+      div
         a(style='word-wrap:break-word;') {{match.model.name}}
-    div.alert.alert-warning.sample-show-hide(style='z-index:2;',ng-init='fCityAdded=false;locRes=false;isSidebar=false;isMessage=false;',ng-show='showMessage()') {{errMsg}}
+    div.alert.alert-warning.sample-show-hide(style='z-index:2;',ng-init='locRes=false;isSidebar=false;isMessage=false;',ng-show='showMessage()') {{errMsg}}
     div.sidebar.sample-show-hide(sidebar-handler,style='z-index:2;position:fixed;',ng-show='showSidebar()')
       button(id='sidebutton',ng-class='class',style='float:right;background-color:#FF8300;outline:none;border:0px;',ng-click='clickHandler1()')
       ul.list-group(ng-controller='manageCitiesCont',style='list-style-type:none;clear:both;border-radius:0;')
-        li.list-group-item(ng-repeat='city in cities',ng-style='myStyle',ng-mouseover='hoverHandler()',ng-mouseleave='leaveHandler()',city-id='{{city.Id}}',style='background-color: #FF8300;border:0px;margin-right:15px;margin-left:5px;')
+        li.list-group-item.hovereffect(ng-repeat='city in cities',ng-init='showCross=false;',ng-mouseover='showCross=true;',ng-mouseleave='showCross=false;',city-id='{{city.Id}}',style='border:0px;margin-right:15px;margin-left:5px;')
           a.listlink(href='#',ng-click='clickHandler()',style='text-decoration:none') {{city.city}}
-          a.glyphicon.glyphicon-remove-sign(href='#',style='float:right;margin-right:2px;visibility:hidden',ng-click='crossHandler()')
+          a.glyphicon.glyphicon-remove-sign(href='#',style='float:right;margin-right:2px;',ng-click='crossHandler()',ng-show='showCross')
         li.list-group-item(style='border:0px;margin-right:15px;margin-left:5px;') 
           input#locInput(type="text",ng-model="newCity",placeholder="Locations",typeahead="address.name for address in getLocations($viewValue)",typeahead-loading="loadingLocations",typeahead-on-select='selectionFunc($item);',class="form-control",ng-enter='addCity(this)',typeahead-template-url='customTemplate',style='display:none;width:80%;') 
           a.glyphicon.glyphicon-remove(href='#',style='display:none;margin-left:5px;float:right;',ng-click='removeInput();')

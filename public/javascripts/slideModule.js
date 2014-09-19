@@ -6,11 +6,11 @@ myApp.directive('slideHandler', function($interval,$timeout) {
         link: function(scope, ele, attrs) {
             var startCoor, currCoor;
             scope.forecasts = [];
-            var evtHandler = new Hammer(Sizzle('div#container-fluid ul')[0]);
+            var evtHandler = new Hammer($('div#container-fluid ul')[0]);
             var left = 0;
 
             var stopId = $interval(function() {
-                var firstliScope = angular.element(Sizzle('div#container-fluid li div')[0]).scope()
+                var firstliScope = angular.element($('div#container-fluid li div')[0]).scope()
 
                 if (firstliScope) {
                     firstliScope.zoom1 = '115%';
@@ -23,7 +23,7 @@ myApp.directive('slideHandler', function($interval,$timeout) {
             scope.releaseHandler = function() {
 
               scope.selectedDay =  scope.selectedDay1;
-              var scope1 = angular.element(Sizzle('li div:contains('+scope.selectedDay.date+')')[0]).scope();  
+              var scope1 = angular.element($('li div:contains('+scope.selectedDay.date+')')[0]).scope();  
               scope1.zoom1 = '115%';
             
             };
@@ -43,13 +43,13 @@ myApp.directive('slideHandler', function($interval,$timeout) {
 
             scope.$watch('forecasts', function() {
                 console.log('container width is');
-                console.log(Sizzle('div#container-fluid')[0].offsetWidth);
+                console.log($('div#container-fluid').width());
                 $timeout(function(){
             
-            if (scope.forecasts.length == 14 && (Sizzle('div#container-fluid')[0].offsetWidth < (Sizzle('div#container-fluid li')[1].offsetWidth * 14)))
+            if (scope.forecasts.length == 14 && ($('div#container-fluid')[0].offsetWidth < ($('div#container-fluid li').width() * 14)))
                  {
                     evtHandler.on('pan', function(event) {
-                        var listItems = Sizzle('div#container-fluid li');
+                        var listItems = $('div#container-fluid li');
 
                         for (var i = 0; i < listItems.length; i++) {
                             var scope1 = angular.element(listItems[i]).scope();
@@ -60,7 +60,7 @@ myApp.directive('slideHandler', function($interval,$timeout) {
                     });
 
                     evtHandler.on('panend', function(event) {
-                        var listItems = Sizzle('div#container-fluid li');
+                        var listItems = $('div#container-fluid li');
                         left = parseFloat(listItems[0].style.left);
 
                         if (left > 0)
@@ -69,7 +69,7 @@ myApp.directive('slideHandler', function($interval,$timeout) {
                         if (left < 0) {
 
                             var itemWidth = listItems[0].offsetWidth;
-                            var divWidth = Sizzle('div#container-fluid')[0].offsetWidth + ((-1) * left);
+                            var divWidth = $('div#container-fluid')[0].offsetWidth + ((-1) * left);
                             var totalslides = scope.forecasts.length;
                             var extraslides = totalslides * itemWidth - divWidth;
 
@@ -94,8 +94,8 @@ myApp.directive('slideHandler', function($interval,$timeout) {
 
             scope.hoverHandler1 = function(eve) {
 
-                var ss = angular.element(Sizzle('div#selectedDay')[0]).scope();
-                var allli = Sizzle('div#container-fluid li');
+                var ss = angular.element($('div#selectedDay')[0]).scope();
+                var allli = $('div#container-fluid li');
 
                 for (var i = 0; i < allli.length; i++) {
                     var scope1 = angular.element(allli[i]).scope();
