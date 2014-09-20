@@ -5,27 +5,27 @@ block content
     script#customTemplate(type="text/ng-template")
       div
         a(style='word-wrap:break-word;') {{match.model.name}}
-    div.alert.alert-warning.sample-show-hide(style='z-index:2;',ng-init='locRes=false;isSidebar=false;isMessage=false;',ng-show='showMessage()') {{errMsg}}
-    div.sidebar.sample-show-hide(sidebar-handler,style='z-index:2;position:fixed;',ng-show='showSidebar()')
-      button(id='sidebutton',ng-class='class',style='float:right;background-color:#FF8300;outline:none;border:0px;',ng-click='clickHandler1()')
-      ul.list-group(ng-controller='manageCitiesCont',style='list-style-type:none;clear:both;border-radius:0;')
-        li.list-group-item.hovereffect(ng-repeat='city in cities',ng-init='showCross=false;',ng-mouseover='showCross=true;',ng-mouseleave='showCross=false;',city-id='{{city.Id}}',style='border:0px;margin-right:15px;margin-left:5px;')
-          a.listlink(href='#',ng-click='clickHandler()',style='text-decoration:none') {{city.city}}
+    div.alert.alert-warning.show-hide-transition(ng-init='errMsg="Loading Location"',ng-show='isMessage') {{errMsg}}
+    div.sidebar.show-hide-transition(sidebar-handler,style='position:fixed;',ng-show='isSidebar')
+      ul.list-group(style='list-style-type:none;clear:both;border-radius:0;')
+        li.list-group-item.hover-effect(ng-repeat='city in cities',ng-init='showCross=false;',ng-mouseover='showCross=true;',ng-mouseleave='showCross=false;',cityid='{{city.Id}}',style='border:0px;margin-right:15px;margin-left:5px;',ng-style='bgColor')
+          a(href='#',ng-click='cityClickHandler()',style='text-decoration:none') {{city.city}}
           a.glyphicon.glyphicon-remove-sign(href='#',style='float:right;margin-right:2px;',ng-click='crossHandler()',ng-show='showCross')
-        li.list-group-item(style='border:0px;margin-right:15px;margin-left:5px;') 
+        li.list-group-item(ng-controller='manageCitiesCont',style='border:0px;margin-right:15px;margin-left:5px;') 
           input#locInput(type="text",ng-model="newCity",placeholder="Locations",typeahead="address.name for address in getLocations($viewValue)",typeahead-loading="loadingLocations",typeahead-on-select='selectionFunc($item);',class="form-control",ng-enter='addCity(this)',typeahead-template-url='customTemplate',style='display:none;width:80%;') 
           a.glyphicon.glyphicon-remove(href='#',style='display:none;margin-left:5px;float:right;',ng-click='removeInput();')
           a.glyphicon.glyphicon-plus(href='#',ng-click='clickPlus();',style='text-decoration:none;')
           span#notAvail(style='display:none;') {{message}}
           span#addLabel Add New City
-    div.container-fluid.sample-show-hide1( style='margin-left:210px;',slide-handler)
-      div#container-fluid(style='overflow:hidden;clear:both;',ng-show='fCityAdded')
-        ul(style='list-style-type:none;margin:0;padding:0;width:25000px',ng-mouseleave='releaseHandler()',ng-mouseenter='enterHandler();')
-          li(ng-repeat="location in forecasts",ng-mouseover="hoverHandler1(location);",ng-mouseleave="leaveHandler1(location);",style='position:relative;left:0px;float:left;') 
+    button(id='sidebutton',ng-class='class',style='visibility:hidden;background-color:#FF8300;outline:none;border:0px;position:fixed;left:200px;top:0px;width:30px;height:30px;',class='glyphicon glyphicon-chevron-left visible-sm-inline visible-xs-inline visible-md-inline visible-lg',ng-click='clickHandler1()',ng-show='isSidebar')
+    div.container-fluid.lshow-hide-transition(style='margin-left:210px;',slide-handler)
+      div#forecast-data(style='overflow:hidden;clear:both;',ng-show='showForecasts()')
+        ul(style='list-style-type:none;margin:0;padding:0;width:25000px',ng-mouseleave='releaseHandler()')
+          li(ng-repeat="location in forecasts",ng-mouseover="dayHoverHandler(location);",ng-mouseleave="dayLeaveHandler();",style='position:relative;left:0px;float:left;') 
             div(ng-style='{zoom:zoom1}')
-              img(ng-src='http://openweathermap.org/img/w/{{location.weather[0].icon}}.png',style='display:block;width:56px;height:56px;',draggable='false',ng-click="clickHandler2(location)")
+              img(ng-src='http://openweathermap.org/img/w/{{location.weather[0].icon}}.png',style='display:block;width:56px;height:56px;',draggable='false',ng-click="dayClick(location);")
               {{location.date}}
-      div#selectedDay(style='text-align:center;',ng-show='fCityAdded') 
+      div#selectedDay(style='text-align:center;',ng-show='showForecasts()') 
         div {{selectedDay.date}}
           img(ng-src='http://openweathermap.org/img/w/{{selectedDay.weather[0].icon}}.png',style='width:70px;height:70px;')
         table.table(style='width:50%;float:left;')
@@ -72,6 +72,5 @@ block content
               td {{selectedDay.clouds}}%
             tr
               td(style='float:right;') Wind
-              td {{selectedDay.speed}}&nbsp;Km/hr    
-      div#map.smallmap(style='float:left;width:100%;visibility:hidden;',map-directive)
-        
+              td {{selectedDay.speed}}&nbsp;Km/hr
+      div#map.smallmap(style='float:left;width:100%;visibility:hidden;',map-directive)              

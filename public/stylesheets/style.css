@@ -1,18 +1,22 @@
 body {
+
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #808080;
   margin:0px;
+
 }
 
-div.sidebar ul.list-group li.hovereffect:hover{
+div.sidebar ul.list-group li.hover-effect:hover{
 
  background-color : #FFA500;
 
 }
 
 ul.dropdown-menu li:hover{
+    
     background-color: #800080;
+
 }
 
 ul.dropdown-menu {
@@ -20,7 +24,9 @@ ul.dropdown-menu {
 }
 
 div.ps-scrollbar-y{
+
     background-color :grey;
+
 }
 
 a {
@@ -39,6 +45,7 @@ a {
   box-sizing: content-box; }
 
 .sidebar {
+
     -moz-transition: left .1s;
     -webkit-transition: left .1s;
     -o-transition: left .1s;
@@ -50,46 +57,38 @@ a {
     top: 0px;
     bottom: 0px;
     left: 0px;
- height:100%;
-overflow: hidden;
+    height:100%;
+    overflow: hidden;
+
 }
 
-.slide-out {
-    -moz-transition: left 1s;
-    -webkit-transition: left 1s;
-    -o-transition: left 1s;
-    transition: left 1s;
-    left: 0px;
-    
-}
-
-.sample-show-hide {
- 
+.show-hide-transition {
+ -moz-transition: all linear 1s;
+  -o-transition:all linear 1s;
   -webkit-transition:all linear 1s;
   transition:all linear 1s;
 
 }
 
-.sample-show-hide.ng-hide {
+.show-hide-transition.ng-hide {
   opacity:0;
+
 }
 
-.sample-show-hide.ng-show {
+.show-hide-transition.ng-show {
     opacity:1;
 }
 
-.sample-show-hide1{
- 
+.lshow-hide-transition{
  -webkit-transition:all linear 3s;
   transition:all linear 3s;
-
 }
 
-.sample-show-hide1.ng-show {
+.lshow-hide-transition.ng-show {
     opacity:1;
 }
 
-.sample-show-hide1.ng-hide {
+.lshow-hide-transition.ng-hide {
   opacity:0;
 }
 
@@ -126,82 +125,6 @@ color:#000000;
 
 }
 
-table.table>tbody>tr>td {
-	border:0px;
-}
-
-/**
- * CSS Reset
- * From Blueprint reset.css
- * http://blueprintcss.googlecode.com
- */
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {margin:0;padding:0;border:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align:baseline;}
-body {line-height:1.5;}
-table {border-collapse:separate;border-spacing:0;}
-caption, th, td {text-align:left;font-weight:normal;}
-table, td, th {vertical-align:middle;}
-blockquote:before, blockquote:after, q:before, q:after {content:"";}
-blockquote, q {quotes:"" "";}
-a img {border:none;}
-
-/**
- * Basic Typography
- */
-body {
-    font-family: "Lucida Grande", Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
-    font-size: 80%;
-    color: #222;
-    background: #fff;
-    margin: 1em 1.5em;
-}
-pre, code {
-    margin: 1.5em 0;
-    white-space: pre;
-}
-pre, code {
-    font: 1em 'andale mono', 'lucida console', monospace;
-    line-height:1.5;
-}
-a[href] {
-    color: #436976;
-    background-color: transparent;
-}
-h1, h2, h3, h4, h5, h6 {
-    color: #003a6b;
-    background-color: transparent;
-    font: 100% 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
-    margin: 0;
-    padding-top: 0.5em;
-}
-
-h1 {
-    font-size: 130%;
-    margin-bottom: 0.5em;
-    border-bottom: 1px solid #fcb100;
-}
-h2 {
-    font-size: 120%;
-    margin-bottom: 0.5em;
-    border-bottom: 1px solid #aaa;
-}
-h3 {
-    font-size: 110%;
-    margin-bottom: 0.5em;
-    text-decoration: underline;
-}
-
-h4 {
-    font-size: 100%;
-    font-weight: bold;
-}
-h5 {
-    font-size: 100%;
-    font-weight: bold;
-}
-h6 {
-    font-size: 80%;
-    font-weight: bold;
-}
 
 .olControlAttribution {
     bottom: 5px;
@@ -215,15 +138,9 @@ h6 {
     border: 1px solid #ccc;
 }
 
-#tags {
-    display: none;
-}
 
-#docs p {
-    margin-bottom: 0.5em;
-}
 /* mobile specific */
-@media only screen and (max-width: 600px) {
+/*@media only screen and (max-width: 600px) {
     body {
         height           : 100%;
         margin           : 0;
@@ -234,10 +151,12 @@ h6 {
         background : #7391ad;
         width      : 100%;
     }
+
     #map {
         border : 0;
         height : 250px;
     }
+
     #title {
         font-size   : 1.3em;
         line-height : 2em;
@@ -245,37 +164,23 @@ h6 {
         margin      : 0;
         padding     : 0;
     }
-    #docs {
-        bottom     : 0;
-        padding    : 1em;
-    }
-    #shortdesc {
-        color      : #aaa;
-        font-size  : 0.8em;
-        padding    : 1em;
-        text-align : right;
-    }
-    #tags {
-        display : none;
-    }
-}
+
+   
+
+   
+} */
 
 /*.sidebar ul li:first-child{
     background-color: #FFA500;
 }*/
 
-@media only screen and (orientation: landscape) and (max-width: 600px) {
-    #shortdesc {
-       float: right;
-       width: 25%;
-    }
+/*@media only screen and (orientation: landscape) and (max-width: 600px) {
+    
     #map {
         width: 70%;
-    }
-    #docs {
-        font-size: 12px;
-    }
 }
+
+}*/
 
 body {
     -webkit-text-size-adjust: none;
@@ -286,15 +191,11 @@ body {
   initial-scale:1.0;
 }
 
-#sidebutton{
-  display:none;
-    }
-
 .olControlButtonItemActive {
+    
     position: absolute;
     top: 0;
     right: 0;
-
     width: 22px;
     height: 22px;
 }
@@ -306,8 +207,8 @@ body {
 }
 
 
-
 @media only screen and (max-width: 1200px) and (min-resolution : 250dpi)
 
 @media only screen and (max-width: 500px) and (min-resolution : 200dpi)
+
 @media only screen and (max-width: 500px) and (min-resolution : 150dpi)

@@ -36,7 +36,9 @@ myApp.factory("GeolocationService", ['$q', '$window', '$rootScope',
                     $rootScope.$apply(function() {
                         deferred.reject(error);
                     });
-                },{ enableHighAccuracy: true });
+                }, {
+                    enableHighAccuracy: true
+                });
             }
 
             return deferred.promise;
@@ -45,67 +47,166 @@ myApp.factory("GeolocationService", ['$q', '$window', '$rootScope',
 ]);
 
 
-myApp.factory('ProcessResponseService',function(){
-    return function(res){
+myApp.factory('ProcessResponseService', function() {
+    return function(res) {
+        console.log(res);
         for (var i = 0; i < res.data.list.length; i++) {
             res.data.list[i].temp.min = parseInt(res.data.list[i].temp.min - 273.15);
             res.data.list[i].temp.max = parseInt(res.data.list[i].temp.max - 273.15);
-            res[i].temp.day = parseInt(res.data.list[i].temp.day - 273.15);
-            res[i].temp.night = parseInt(res.data.list[i].temp.night - 273.15);
-            res[i].temp.morn = parseInt(res.data.list[i].temp.morn - 273.15);
-            res[i].temp.eve = parseInt(res.data.list[i].temp.eve - 273.15);
-        var iniDate = new Date(1970, 0, 1);
+            res.data.list[i].temp.day = parseInt(res.data.list[i].temp.day - 273.15);
+            res.data.list[i].temp.night = parseInt(res.data.list[i].temp.night - 273.15);
+            res.data.list[i].temp.morn = parseInt(res.data.list[i].temp.morn - 273.15);
+            res.data.list[i].temp.eve = parseInt(res.data.list[i].temp.eve - 273.15);
+            var iniDate = new Date(1970, 0, 1);
             iniDate.setSeconds(parseFloat(res.data.list[i].dt));
             var dateStr = iniDate.toDateString();
             var dateParts = dateStr.split(' ');
             res.data.list[i].date = dateParts[1] + ' ' + dateParts[2];
 
         }
+        return res.data.list;
     }
 });
 
-myApp.directive('sidebarHandler', ['$http',
-    function($http) {
+myApp.factory('CreateCityService', function() {
+    return function(newCity) {
+        var city = {};
+        city.city = newCity.name;
+        city.lat = newCity.coord.lat;
+        city.lon = newCity.coord.lon;
+        city.Id = newCity.id;
+        return city;
+
+    }
+});
+
+myApp.factory('GetForecastService',['$http','ProcessResponseService',function($http,processRes){
+    return function(city){
+    var fScope = angular.element($('div#selectedDay')[0]).scope();
+
+                if (!fScope.forecasts)
+                    fScope.forecasts = [];
+
+                var FORECAST_URL = 'http://api.openweathermap.org/data/2.5/forecast/daily';
+
+                $http.get(FORECAST_URL, {
+                    params: {
+                        id: city.Id,
+                        cnt: '14'
+                    }
+                }).then(function(res) {
+                    fScope.forecasts = processRes(res);
+
+                    fScope.selectedDay = fScope.forecasts[0];
+                    fScope.permSelectedDay = fScope.forecasts[0];
+
+                });
+
+    }
+}]);
+
+myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
+    '$timeout', 'ProcessResponseService', 'CreateCityService','GetForecastService',
+    function($http, $rootScope, GeolocationService, $timeout, processRes, createCity,foreCast) {
         return function(scope, element, attrs) {
-            
+
             scope.cities = [];
             scope.selectedCity = {};
+            $rootScope.isMessage = true;
+            $rootScope.isSidebar = false;
+           var clear = $rootScope.$watch('isSidebar',function(){
+                if($rootScope.isSidebar)
+                    {$('button#sidebutton').css('visibility','visible');
+           clear();}
+            });
             var ulSidebar = $('.sidebar ul');
-            
+
             $('div.sidebar').perfectScrollbar({
                 suppressScrollX: true
+            });
+            $('button#sidebutton').addClass('show-hide-transition');
+
+            GeolocationService().then(function(position) {
+                var params = {
+                    lon: position.coords.longitude,
+                    lat: position.coords.latitude,
+                    cnt: '1'
+                };
+
+                $http.get(FIND_CITY_URL, {
+                    params: params
+                }).then(function(res) {
+                    var city = createCity(res.data.list[0]);
+                    scope.cities.push(city);
+                    scope.selectedCity = scope.cities[0];
+                    $rootScope.isSidebar = true;
+                    $rootScope.isMessage = false;
+                    $('div#map').css('visibility', 'visible');
+                    $timeout(function() {
+                       var selCityScope =  angular.element($('li.hover-effect')[0]).scope();
+                    selCityScope.bgColor={};
+                    selCityScope.bgColor['background-color']='#FFA500';
+                    }, 1000);
+                    
+                    foreCast(scope.selectedCity);
+
+                });
+            }, function(reason) {
+
+                var divScope = angular.element($('div.alert.alert-warning')[0]).scope();
+                $rootScope.isMessage = true;
+                if ((typeof reason).toUpperCase() == 'OBJECT')
+                    divScope.errMsg = reason.message;
+                else divScope.errMsg = reason;
+
+                $timeout(function() {
+                    $rootScope.isMessage = false;
+                    $rootScope.isSidebar = true;
+
+                }, 2000);
             });
 
             scope.clickHandler1 = function() {
                 var flt = parseInt($('div.sidebar').css('left'));
 
                 if (flt > -1) {
-                    $('div.sidebar').css('left', '-70px');
+                    $('div.sidebar').css('left', '-200px');
+                    $('#sidebutton').css('left','0px');
                     scope.class = 'glyphicon glyphicon-chevron-right';
 
                 } else {
                     $('div.sidebar').css('left', '0px');
+                    $('#sidebutton').css('left','200px');
                     scope.class = 'glyphicon glyphicon-chevron-left';
                 }
 
             };
 
-            scope.showSidebar = function() {
-                return (scope.locRes && scope.isSidebar);
+            scope.cityClickHandler = function() {
+               
+                var ulSidebar = $('.sidebar ul');
+                console.log('city is');
 
-            }
+                console.log($('li[cityid="' + scope.selectedCity.Id + '"]', ulSidebar));
+               var selCityScope = angular.element($('li[cityid="' + scope.selectedCity.Id + '"]', ulSidebar)[0]).scope();
+              
+                selCityScope.bgColor = {};
+                var currCity = this.city;
+                scope.selectedCity = currCity;
+                foreCast(currCity);
 
-            scope.showMessage = function() {
-                return (scope.locRes && scope.isMessage);
+               selCityScope = angular.element($('li[cityid="' + currCity.Id + '"]', ulSidebar)[0]).scope();
+               console.log('selCityScope is');
+               console.log(selCityScope); 
+               selCityScope.bgColor = {};
+               selCityScope.bgColor['background-color'] = '#FFA500';
+     
+            };
 
-            }
-
-            scope.clickPlus = function() {
-                $('a.glyphicon-plus').css('display', 'none');
-                $('span#addLabel').css('display', 'none');
-                $('input#locInput').css('display', 'inline');
-                $('a.glyphicon-remove').css('display', 'inline');
-            
+            scope.crossHandler = function() {
+                for (var i = 0; i < scope.cities.length; i++)
+                    if (scope.cities[i] == this.city)
+                        scope.cities.splice(i, 1);
             };
 
         }
@@ -113,74 +214,49 @@ myApp.directive('sidebarHandler', ['$http',
     }
 ]);
 
-myApp.controller('manageCitiesCont', ['$rootScope', '$scope', 'GeolocationService', '$http',
-     '$timeout', 'ProcessResponseService',
-    function($rootScope, $scope, GeolocationService, $http, $timeout, processRes) {
-        GeolocationService().then(function(position) {
-            var params = {
-                lon: position.coords.longitude,
-                lat: position.coords.latitude,
-                cnt: '1'
-            };
+myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http','$timeout', 'CreateCityService','GetForecastService','GetForecastService',
+    function($rootScope, $scope, $http, $timeout,createCity,foreCast) {
 
-            $http.get(FIND_CITY_URL, {
-                params: params
+        $scope.getLocations = function(val) {
+            return $http.get(FIND_CITY_URL, {
+                params: {
+                    q: val,
+                    type: 'like'
+                }
             }).then(function(res) {
-                var city = {};
-                city.city = res.data.list[0].name;
-                city.lat = res.data.list[0].coord.lat;
-                city.lon = res.data.list[0].coord.lon;
-                city.Id = res.data.list[0].id;
-                $scope.cities.push(city);
-                $scope.$parent.selectedCity = $scope.cities[0];
-                $rootScope.locRes = true;
-                $rootScope.isSidebar = true;
-                $rootScope.isMessage = false;
-                $('div#map').css('visibility', 'visible');
-                getForecastData($scope.selectedCity);
+
+                if (res.data.list)
+                    $scope.$parent.addresses = res.data.list;
+                else $scope.$parent.addresses = [];
+                return $scope.$parent.addresses;
 
             });
-        }, function(reason) {
+        };
 
-            var divScope = angular.element($('div.sample-show-hide')[0]).scope();
-            $rootScope.locRes = true;
-            $rootScope.isMessage = true;
-            if ((typeof reason).toUpperCase() == 'OBJECT')
-                divScope.errMsg = reason.message;
-            else divScope.errMsg = reason;
-
-            $timeout(function() {
-                    $rootScope.isMessage = false;
-                    $rootScope.isSidebar = true;
-            
-            }, 2000);
-        });
-
-        $scope.addCity = function(context) {
-
-            var newCity = $('input#locInput').val();
+        $scope.addCity = function() {
             var city = {};
-        
             var cityPresent = false;
+            if(!$scope.addresses)
+              {  $scope.message = 'Location not available';
+            return;
+        }
             if ($scope.selection)
-                if (newCity == $scope.selection.name) {
-                    city.Id = $scope.selection.id;
+                if ($scope.newCity == $scope.selection.name) {
                     cityPresent = true;
-                  city = checkAndInsertCity(city)                
+                    city = checkAndInsertCity($scope.selection);
                 }
 
             if (!cityPresent)
                 for (var i = 0; i < $scope.addresses.length; i++) {
-                    if ($scope.addresses[i].name == newCity) {
-                        city.Id = $scope.addresses[i].id;
-                        city = checkAndInsertCity(city);
+                    if ($scope.addresses[i].name == $scope.newCity) {
+                        cityPresent = true;
+                        city = checkAndInsertCity($scope.addresses[i]);
                         break;
                     }
                 }
 
-            if (!cityPresent) {
+            if (!cityPresent)
                 $scope.message = 'Location Not available';
-            }
 
             if (!city.city)
                 $('span#notAvail').css('display', 'inline');
@@ -192,27 +268,22 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', 'GeolocationServic
                 $('span#notAvail').css('display', 'none');
                 $('a.glyphicon-remove').css('display', 'none');
             }
-        
+
         };
 
-function checkAndInsertCity(city){
-    if (checkForDuplicate(city)) {
-                        city.city = newCity;
-                        city.lat = $scope.selection.coord.lat;
-                        city.lon = $scope.selection.coord.lon;
-                        $scope.cities.push(city);
-                        if ($scope.cities.length == 1) {
-                            $scope.$parent.selectedCity = $scope.cities[0];
-                            getForecastData($scope.selectedCity);
-                            $("div#map").css('visibility', 'visible');
-                        }
-                    } else $scope.message = 'Location already in the list';
-return city;
+        $scope.clickPlus = function() {
+            $('a.glyphicon-plus').css('display', 'none');
+            $('span#addLabel').css('display', 'none');
+            $('input#locInput').css('display', 'inline');
+            $('a.glyphicon-remove').css('display', 'inline');
 
-}
+        };
 
+        $scope.selectionFunc = function(item) {
+            $scope.selection = item;
+        };
 
-function checkForDuplicate(city) {
+        function checkForDuplicate(city) {
             for (var i = 0; i < $scope.cities.length; i++) {
                 if ($scope.cities[i].Id == city.Id) {
                     return false;
@@ -220,8 +291,7 @@ function checkForDuplicate(city) {
                 }
             }
             return true;
-        }
-
+        };
 
         $scope.removeInput = function() {
             $('input#locInput').css('display', 'none');
@@ -229,68 +299,32 @@ function checkForDuplicate(city) {
             $('a.glyphicon-plus').css('display', 'inline');
             $('span#notAvail').css('display', 'none');
             $('span#addLabel').css('display', 'inline');
-        
+
         };
 
-        $scope.getLocations = function(val) {
-            return $http.get(FIND_CITY_URL, {
-                params: {
-                    q: val,
-                    type: 'like'
+        function checkAndInsertCity(newCity) {
+            var city = {};
+            if (checkForDuplicate(newCity)) {
+                city = createCity(newCity);
+                $scope.cities.push(city);
+                if ($scope.cities.length == 1) {
+                    $scope.$parent.selectedCity = $scope.cities[0];
+                     $timeout(function(){
+                        
+                    var selCityScope = angular.element( $('li.hover-effect[cityid='+city.Id+']')[0]).scope();
+                     console.log('selected city scope is');
+                    console.log(selCityScope);
+
+                    selCityScope.bgColor={};
+                    selCityScope.bgColor['background-color'] = '#FFA500';
+                    },1000); 
+                
+                    foreCast($scope.selectedCity);
+                    $("div#map").css('visibility', 'visible');
                 }
-            }).then(function(res) {
+            } else $scope.message = 'Location already in the list';
 
-                if (res.data.list)
-                    $scope.addresses = res.data.list;
-                else $scope.addresses = [];
-                return $scope.addresses;
-
-            });
+            return city;
         };
-
-        
-        $scope.crossHandler = function() {
-            for (var i = 0; i < $scope.cities.length; i++)
-                if ($scope.cities[i] == this.city)
-                    $scope.cities.splice(i, 1);
-        };
-
-        $scope.clickHandler = function() {
-            var ulSidebar = $('.sidebar ul');
-            $('li[city-id = ' + $scope.selectedCity.Id + ']', ulSidebar).css('background-color', '#FF8300');
-            var currCity = this.city;
-            $scope.$parent.selectedCity = currCity;
-
-            getForecastData(currCity);
-            $('li[city-id=' + currCity.Id + '])', ulSidebar).css('background-color', '#FFA500');
-
-        };
-
-        $scope.selectionFunc = function(item) {
-            $scope.selection = item;
-
-        }
-
-
-        function getForecastData(city) {
-            var fScope = angular.element($('div#selectedDay')[0]).scope();
-            if (!fScope.forecasts)
-                fScope.forecasts = [];
-
-            var FORECAST_URL = 'http://api.openweathermap.org/data/2.5/forecast/daily';
-
-            $http.get(FORECAST_URL, {
-                params: {
-                    id: city.Id,
-                    cnt: '14'
-                }
-            }).then(function(res) {
-                fScope.forecasts = processRes(res);
-    
-                fScope.selectedDay = fScope.forecasts[0];
-                fScope.selectedDay1 = fScope.forecasts[0];
-
-            });
-        }
     }
 ]);

@@ -1,122 +1,108 @@
 var myApp = angular.module('SlideModule', ['ui.bootstrap']);
 
-myApp.directive('slideHandler', function($interval,$timeout) {
-    return {
-        restrict: 'EA',
-        link: function(scope, ele, attrs) {
-            var startCoor, currCoor;
-            scope.forecasts = [];
-            var evtHandler = new Hammer($('div#container-fluid ul')[0]);
-            var left = 0;
+myApp.directive('slideHandler', ['$interval', '$timeout',
+    function($interval, $timeout) {
+        return {
+            restrict: 'A',
+            link: function(scope, ele, attrs) {
+                scope.forecasts = [];
+                var left = 0;
+                var evtHandler = new Hammer($('div#forecast-data ul')[0]);
+                var stopId = $interval(function() {
+                        var firstliScope = angular.element($('div#forecast-data li div')[0]).scope();
 
-            var stopId = $interval(function() {
-                var firstliScope = angular.element($('div#container-fluid li div')[0]).scope()
-
-                if (firstliScope) {
-                    firstliScope.zoom1 = '115%';
-                    $interval.cancel(stopId);
-                }
-            }, 500);
-            //var prevSelectedDay;
-            var firstTime = false;
-            
-            scope.releaseHandler = function() {
-
-              scope.selectedDay =  scope.selectedDay1;
-              var scope1 = angular.element($('li div:contains('+scope.selectedDay.date+')')[0]).scope();  
-              scope1.zoom1 = '115%';
-            
-            };
-
-            scope.enterHandler= function(){
-              
-              //console.log('entering');
-              firstTime = true;
-             // prevSelectedDay = scope.selectedDay;
-            
-            };
-
-            scope.clickHandler2 = function(day){
-                console.log('clicking');
-                scope.selectedDay1= day;
-            };
-
-            scope.$watch('forecasts', function() {
-                console.log('container width is');
-                console.log($('div#container-fluid').width());
-                $timeout(function(){
-            
-            if (scope.forecasts.length == 14 && ($('div#container-fluid')[0].offsetWidth < ($('div#container-fluid li').width() * 14)))
-                 {
-                    evtHandler.on('pan', function(event) {
-                        var listItems = $('div#container-fluid li');
-
-                        for (var i = 0; i < listItems.length; i++) {
-                            var scope1 = angular.element(listItems[i]).scope();
-                            scope1.zoom1 = '100%';
-                            listItems[i].style.left = (event.deltaX + left) + 'px';
-
+                        if (firstliScope) {
+                            firstliScope.zoom1 = '115%';
+                            $interval.cancel(stopId);
                         }
-                    });
+                    },
+                    500);
 
-                    evtHandler.on('panend', function(event) {
-                        var listItems = $('div#container-fluid li');
-                        left = parseFloat(listItems[0].style.left);
+                var isHover = false;
 
-                        if (left > 0)
-                            left = 0;
+                scope.releaseHandler = function() {
+                    scope.selectedDay = scope.permSelectedDay;
+                    isHover = false;
+                    var selectedItemScope = angular.element($('li div:contains(' + scope.selectedDay.date + ')')[0]).scope();
+                    selectedItemScope.zoom1 = '115%';
 
-                        if (left < 0) {
+                };
 
-                            var itemWidth = listItems[0].offsetWidth;
-                            var divWidth = $('div#container-fluid')[0].offsetWidth + ((-1) * left);
-                            var totalslides = scope.forecasts.length;
-                            var extraslides = totalslides * itemWidth - divWidth;
+                scope.dayClick = function(day) {
+                    scope.permSelectedDay = day;
 
-                            if (extraslides < 0) {
+                };
 
-                                if ((extraslides) < (left))
+                scope.showForecasts = function() {
+                    if (scope.forecasts.length > 0)
+                        return true;
+                    else return false;
+                };
+
+                scope.$watch('forecasts', function() {
+
+                    $timeout(function() {
+
+                        if (scope.forecasts.length > 0 && ($('div#forecast-data').width() < ($('div#forecast-data li').width() * 14))) {
+                            evtHandler.on('pan', function(event) {
+                                var dayList = $('div#forecast-data li');
+                                dayList.css('left', event.deltaX + left + 'px');
+                                for (var i = 0; i < listItems.length; i++) {
+                                    var dayScope = angular.element(listItems[i]).scope();
+                                    dayScope.zoom1 = '100%';
+
+                                }
+                            });
+
+                            evtHandler.on('panend', function(event) {
+                                var dayList = $('div#forecast-data li');
+                                left = parseFloat(dayList.css('left'));
+
+                                if (left > 0)
                                     left = 0;
-                                else
-                                    left += (-1) * extraslides;
 
-                            }
+                                if (left < 0) {
+
+                                    var dayWidth = dayList.width();
+                                    var containerWidth = $('div#forecast-data').width() + ((-1) * left);
+                                    var totalslides = scope.forecasts.length;
+                                    var extraSpace = totalslides * dayWidth - containerWidth;
+
+                                    if (extraSpace < 0) {
+
+                                        if (extraSpace < (left))
+                                            left = 0;
+                                        else
+                                            left += (-1) * extraSpace;
+
+                                    }
+                                }
+
+                                dayList.css('left', left + 'px');
+                            });
                         }
 
-                        for (var i = 0; i < listItems.length; i++)
-                            listItems[i].style.left = left + 'px';
-                    });
-                }
+                    }, 1000);
+                });
 
-            },1000);
-            });
+                scope.dayHoverHandler = function(eve) {
+                    if (!isHover) {
+                        isHover = true;
+                        scope.permSelectedDay = scope.selectedDay;
+                    }
+                    var selectedDayScope = $('div#forecast-data div:contains(' + scope.selectedDay.date + ')').scope();
+                    selectedDayScope.zoom1 = '100%';
+                    this.zoom1 = '115%';
+                    scope.selectedDay = eve;
 
+                };
 
-            scope.hoverHandler1 = function(eve) {
+                scope.dayLeaveHandler = function() {
 
-                var ss = angular.element($('div#selectedDay')[0]).scope();
-                var allli = $('div#container-fluid li');
+                    this.zoom1 = '100%';
 
-                for (var i = 0; i < allli.length; i++) {
-                    var scope1 = angular.element(allli[i]).scope();
-                    scope1.zoom1 = '100%';
-                }
-             /*   if(firstTime)
-                { console.log('selectedday is');
-                    console.log(scope.selectedDay);
-                    scope.prevSelectedDay = scope.selectedDay ;
-                firstTime = false;
-                } */
-                this.zoom1 = '115%';
-                scope.selectedDay = eve;
-
-            };
-
-            scope.leaveHandler1 = function() {
-
-                this.zoom1 = '100%';
-
-            };
+                };
+            }
         }
     }
-});
+]);
