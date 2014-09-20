@@ -116,8 +116,10 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
             $rootScope.isSidebar = false;
            var clear = $rootScope.$watch('isSidebar',function(){
                 if($rootScope.isSidebar)
-                    {$('button#sidebutton').css('visibility','visible');
-           clear();}
+                    {
+                        $('button#sidebutton').css('visibility','visible');
+           clear();
+       }
             });
             var ulSidebar = $('.sidebar ul');
 

@@ -46,10 +46,6 @@ a {
 
 .sidebar {
 
-    -moz-transition: left .1s;
-    -webkit-transition: left .1s;
-    -o-transition: left .1s;
-    transition: left .1s;
     width: 200px;
     background-color: #FF8300;
     position: absolute;
@@ -63,6 +59,7 @@ a {
 }
 
 .show-hide-transition {
+
  -moz-transition: all linear 1s;
   -o-transition:all linear 1s;
   -webkit-transition:all linear 1s;
@@ -76,7 +73,9 @@ a {
 }
 
 .show-hide-transition.ng-show {
+    
     opacity:1;
+
 }
 
 .lshow-hide-transition{
@@ -91,12 +90,6 @@ a {
 .lshow-hide-transition.ng-hide {
   opacity:0;
 }
-
-/*div.alert{
-
-
-}
-*/
 
 @keyframes myfirst {
     from {: red;}
@@ -138,49 +131,13 @@ color:#000000;
     border: 1px solid #ccc;
 }
 
+div#container {
 
-/* mobile specific */
-/*@media only screen and (max-width: 600px) {
-    body {
-        height           : 100%;
-        margin           : 0;
-        padding          : 0;
-        width            : 100%;
-    }
-    #map {
-        background : #7391ad;
-        width      : 100%;
-    }
+margin-left : 205px;
 
-    #map {
-        border : 0;
-        height : 250px;
-    }
-
-    #title {
-        font-size   : 1.3em;
-        line-height : 2em;
-        text-indent : 1em;
-        margin      : 0;
-        padding     : 0;
-    }
-
-   
-
-   
-} */
-
-/*.sidebar ul li:first-child{
-    background-color: #FFA500;
-}*/
-
-/*@media only screen and (orientation: landscape) and (max-width: 600px) {
-    
-    #map {
-        width: 70%;
 }
 
-}*/
+
 
 body {
     -webkit-text-size-adjust: none;
@@ -206,9 +163,14 @@ body {
     right: 0px;
 }
 
+@media only screen and (max-width: 768px)
+  div#container {
 
-@media only screen and (max-width: 1200px) and (min-resolution : 250dpi)
+  margin-left : 0px;
 
+}
+
+/*
 @media only screen and (max-width: 500px) and (min-resolution : 200dpi)
 
-@media only screen and (max-width: 500px) and (min-resolution : 150dpi)
+@media only screen and (max-width: 500px) and (min-resolution : 150dpi)*/

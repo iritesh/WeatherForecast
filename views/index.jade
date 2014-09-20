@@ -17,8 +17,8 @@ block content
           a.glyphicon.glyphicon-plus(href='#',ng-click='clickPlus();',style='text-decoration:none;')
           span#notAvail(style='display:none;') {{message}}
           span#addLabel Add New City
-    button(id='sidebutton',ng-class='class',style='visibility:hidden;background-color:#FF8300;outline:none;border:0px;position:fixed;left:200px;top:0px;width:30px;height:30px;',class='glyphicon glyphicon-chevron-left visible-sm-inline visible-xs-inline visible-md-inline visible-lg',ng-click='clickHandler1()',ng-show='isSidebar')
-    div.container-fluid.lshow-hide-transition(style='margin-left:210px;',slide-handler)
+    button(id='sidebutton',ng-class='class',style='visibility:hidden;background-color:#FF8300;outline:none;border:0px;position:fixed;left:200px;top:0px;width:30px;height:30px;',class='glyphicon glyphicon-chevron-left visible-xs-inline',ng-click='clickHandler1()',ng-show='isSidebar')
+    div#container.container-fluid.lshow-hide-transition(style='',slide-handler)
       div#forecast-data(style='overflow:hidden;clear:both;',ng-show='showForecasts()')
         ul(style='list-style-type:none;margin:0;padding:0;width:25000px',ng-mouseleave='releaseHandler()')
           li(ng-repeat="location in forecasts",ng-mouseover="dayHoverHandler(location);",ng-mouseleave="dayLeaveHandler();",style='position:relative;left:0px;float:left;') 
