@@ -171,7 +171,7 @@ table.table td{
    border: 0px !important;
 }
 
-@media only screen and (max-width: 768px){
+@media only screen and (max-width: 850px){
   div#container {
 
   margin-left : 0px;
