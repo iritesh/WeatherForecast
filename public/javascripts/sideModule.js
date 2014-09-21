@@ -166,7 +166,6 @@ $('div#container').css('width',($(window).width()+'px'));}
 
      if(height < 250)
         $('div#map').css('height','250px');
-
   else $('div#map').css('height',height + 'px');
       
 },1000); 
