@@ -18,42 +18,42 @@ myApp.directive('slideHandler', ['$interval', '$timeout','$window',
                     },
                     500);
         var w = angular.element($window);
-
-
         scope.$watch(function(){
             return w.width();
         },function(){
-    //console.log((scope.forecasts.length>0));
     if(w.width() > 768)
     {
-           // console.log('coming here');
-     
       $('div.sidebar').css('left','0px');
-
+                    $('#sidebutton').css('left', '200px');
+                    scope.class = 'glyphicon glyphicon-chevron-left';
+           
       $('div#container').css('width',($(window).width()-$('div.sidebar').width())+'px');
       $('div#map').width($('div#container').width());
+
 //$('div#map').css('width','0px');
     }
     else { 
 $timeout(function(){
-     $('div#container').css('width',$('div#container').width()+'px');
-    $('div#container').css('margin-left','0px');
 
-$('div#map').css('width','100%');
+     $('div#container').css('width','100%');
+   // $('div#container').css('margin-left','0px');
+
+$('div#map').width($('div#container').width());
 },1000);
     
 }
        $timeout(function(){
 
          if (scope.forecasts.length > 0 && ($('div#forecast-data').width() < ($('div#forecast-data li').width() * 14)))            
-            { //console.log('coming in enablement');
-                //console.log('coming here again');
+            { 
                 evtHandler.set({enable :true});
 
-            }else evtHandler.set({enable : false});
+            }else {evtHandler.set({enable : false});
+      $('div#forecast-data li').css('left','0px');
 
+}
 
-        },5000);
+        },1000);
        
          });
 

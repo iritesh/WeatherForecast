@@ -25,7 +25,6 @@ myApp.factory("GeolocationService", ['$q', '$window', '$rootScope',
                 $rootScope.$apply(function() {
                     deferred.reject(new Error("Geolocation is not supported"));
                 });
-
             } else {
                 $window.navigator.geolocation.getCurrentPosition(function(position) {
                     $rootScope.$apply(function() {
@@ -46,10 +45,8 @@ myApp.factory("GeolocationService", ['$q', '$window', '$rootScope',
     }
 ]);
 
-
 myApp.factory('ProcessResponseService', function() {
     return function(res) {
-     //   console.log(res);
         for (var i = 0; i < res.data.list.length; i++) {
             res.data.list[i].temp.min = parseInt(res.data.list[i].temp.min - 273.15);
             res.data.list[i].temp.max = parseInt(res.data.list[i].temp.max - 273.15);
@@ -80,52 +77,54 @@ myApp.factory('CreateCityService', function() {
     }
 });
 
-myApp.factory('GetForecastService',['$http','ProcessResponseService',function($http,processRes){
-    return function(city){
-    var fScope = angular.element($('div#selectedDay')[0]).scope();
+myApp.factory('GetForecastService', ['$http', 'ProcessResponseService',
+    function($http, processRes) {
+        return function(city) {
+            var fScope = angular.element($('div#selectedDay')[0]).scope();
 
-                if (!fScope.forecasts)
-                    fScope.forecasts = [];
+            if (!fScope.forecasts)
+                fScope.forecasts = [];
 
-                var FORECAST_URL = 'http://api.openweathermap.org/data/2.5/forecast/daily';
+            var FORECAST_URL = 'http://api.openweathermap.org/data/2.5/forecast/daily';
 
-                $http.get(FORECAST_URL, {
-                    params: {
-                        id: city.Id,
-                        cnt: '14'
-                    }
-                }).then(function(res) {
+            $http.get(FORECAST_URL, {
+                params: {
+                    id: city.Id,
+                    cnt: '14'
+                }
+            }).then(function(res) {
 
-                    fScope.forecasts = processRes(res);
-                    fScope.selectedDay = fScope.forecasts[0];
-                    fScope.permSelectedDay = fScope.forecasts[0];
+                fScope.forecasts = processRes(res);
+                fScope.selectedDay = fScope.forecasts[0];
+                fScope.permSelectedDay = fScope.forecasts[0];
 
-                });
+            });
 
+        }
     }
-}]);
+]);
 
 myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
-    '$timeout', 'ProcessResponseService', 'CreateCityService','GetForecastService','$window',
-    function($http, $rootScope, GeolocationService, $timeout, processRes, createCity,foreCast,$window) {
+    '$timeout', 'ProcessResponseService', 'CreateCityService', 'GetForecastService', '$window',
+    function($http, $rootScope, GeolocationService, $timeout, processRes, createCity, foreCast, $window) {
         return function(scope, element, attrs) {
 
             scope.cities = [];
             scope.selectedCity = {};
             $rootScope.isMessage = true;
             $rootScope.isSidebar = false;
-           var clear = $rootScope.$watch('isSidebar',function(){
-                if($rootScope.isSidebar)
-                    {
-                        $('button#sidebutton').css('visibility','visible');
-           clear();
-       }
+            var clear = $rootScope.$watch('isSidebar', function() {
+                if ($rootScope.isSidebar) {
+                    $('button#sidebutton').css('visibility', 'visible');
+                    clear();
+                }
             });
             var ulSidebar = $('.sidebar ul');
 
             $('div.sidebar').perfectScrollbar({
                 suppressScrollX: true
             });
+
             $('button#sidebutton').addClass('show-hide-transition');
 
             GeolocationService().then(function(position) {
@@ -144,40 +143,25 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
                     $rootScope.isSidebar = true;
                     $rootScope.isMessage = false;
                     $('div#map').css('visibility', 'visible');
-$timeout(function(){
-    console.log('window width is');
-    console.log($(window).height());
-    console.log($('.sidebar').width());
-            var w = angular.element($window);
-//console.log(w.width());
-
-if($(window).width() < 768){
-$('div#container').css('width',($(window).width()+'px'));}
-      else {
-        $('div#container').css('width',($(window).width() - $('div.sidebar').width())+'px');
-      }
-    //  console.log('width is');
-      
-     // console.log($('div#container').width());
-      $('div#container').width();  
-      $('div#map').css('width','100%');
-      var pos = $('div#map').position();
-      var height = $(window).height() - pos.top;
-console.log('height is');
-        $('div#map').css('height','250px');
-
-console.log(height);
-/*     if(height < 250)
-  else $('div#map').css('height',height + 'px');
-  */    
-},1000); 
-                    
                     $timeout(function() {
-                       var selCityScope =  angular.element($('li.hover-effect')[0]).scope();
-                    selCityScope.bgColor={};
-                    selCityScope.bgColor['background-color']='#FFA500';
+                        var w = angular.element($window);
+
+                        if (w.width() < 768) {
+                            $('div#container').css('width', ($(window).width() + 'px'));
+                        } else {
+                            $('div#container').css('width', ($(window).width() - $('div.sidebar').width()) + 'px');
+                        }
+                
+                        $('div#map').width($('div#container').width());
+                        var pos = $('div#map').position();
+                        $('div#map').css('height', '250px');
+                    var selCityScope = angular.element($('li.hover-effect')[0]).scope();
+                        selCityScope.bgColor = {};
+                        selCityScope.bgColor['background-color'] = '#FFA500';
+                 
+
                     }, 1000);
-                    
+
                     foreCast(scope.selectedCity);
 
                 });
@@ -201,36 +185,31 @@ console.log(height);
 
                 if (flt > -1) {
                     $('div.sidebar').css('left', '-200px');
-                    $('#sidebutton').css('left','0px');
+                    $('#sidebutton').css('left', '0px');
                     scope.class = 'glyphicon glyphicon-chevron-right';
 
                 } else {
                     $('div.sidebar').css('left', '0px');
-                    $('#sidebutton').css('left','200px');
+                    $('#sidebutton').css('left', '200px');
                     scope.class = 'glyphicon glyphicon-chevron-left';
                 }
 
             };
 
             scope.cityClickHandler = function() {
-               
-                var ulSidebar = $('.sidebar ul');
-                // console.log('city is');
 
-               // console.log($('li[cityid="' + scope.selectedCity.Id + '"]', ulSidebar));
-               var selCityScope = angular.element($('li[cityid="' + scope.selectedCity.Id + '"]', ulSidebar)[0]).scope();
-              
+                var ulSidebar = $('.sidebar ul');
+                var selCityScope = angular.element($('li[cityid="' + scope.selectedCity.Id + '"]', ulSidebar)[0]).scope();
+
                 selCityScope.bgColor = {};
                 var currCity = this.city;
                 scope.selectedCity = currCity;
                 foreCast(currCity);
 
-               selCityScope = angular.element($('li[cityid="' + currCity.Id + '"]', ulSidebar)[0]).scope();
-               // console.log('selCityScope is');
-               //  console.log(selCityScope); 
-               selCityScope.bgColor = {};
-               selCityScope.bgColor['background-color'] = '#FFA500';
-     
+                selCityScope = angular.element($('li[cityid="' + currCity.Id + '"]', ulSidebar)[0]).scope();
+                selCityScope.bgColor = {};
+                selCityScope.bgColor['background-color'] = '#FFA500';
+
             };
 
             scope.crossHandler = function() {
@@ -244,8 +223,9 @@ console.log(height);
     }
 ]);
 
-myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http','$timeout', 'CreateCityService','GetForecastService','GetForecastService',
-'$window',    function($rootScope, $scope, $http, $timeout,createCity,foreCast,$window) {
+myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout', 'CreateCityService', 'GetForecastService', 'GetForecastService',
+    '$window',
+    function($rootScope, $scope, $http, $timeout, createCity, foreCast, $window) {
 
         $scope.getLocations = function(val) {
             return $http.get(FIND_CITY_URL, {
@@ -266,10 +246,10 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http','$timeout'
         $scope.addCity = function() {
             var city = {};
             var cityPresent = false;
-            if(!$scope.addresses)
-              {  $scope.message = 'Location not available';
-            return;
-        }
+            if (!$scope.addresses) {
+                $scope.message = 'Location not available';
+                return;
+            }
             if ($scope.selection)
                 if ($scope.newCity == $scope.selection.name) {
                     cityPresent = true;
@@ -339,41 +319,31 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http','$timeout'
                 $scope.cities.push(city);
                 if ($scope.cities.length == 1) {
                     $scope.$parent.selectedCity = $scope.cities[0];
-                     $timeout(function(){
+                    $timeout(function() {
+
+                        var selCityScope = angular.element($('li.hover-effect[cityid=' + city.Id + ']')[0]).scope();
                         
-                    var selCityScope = angular.element( $('li.hover-effect[cityid='+city.Id+']')[0]).scope();
-                    // console.log('selected city scope is');
-                    //console.log(selCityScope);
 
-                    selCityScope.bgColor={};
-                    selCityScope.bgColor['background-color'] = '#FFA500';
-                    },1000); 
-                $timeout(function(){
- //   console.log('window width is');
-   // console.log($(window).width());
-   // console.log($('.sidebar').width());
-            var w = angular.element($window);
-//console.log(w.width());
+                        selCityScope.bgColor = {};
+                        selCityScope.bgColor['background-color'] = '#FFA500';
+                    }, 1000);
+                    $timeout(function() {
+                    
+                        var w = angular.element($window);
 
-if($(window).width() < 768){
-$('div#container').css('width',($(window).width()+'px'));}
-      else {
-        $('div#container').css('width',($(window).width() - $('div.sidebar').width())+'px');
-      }
-    //  console.log('width is');
-      
-  //    console.log($('div#container').width());
-      $('div#container').width();  
-      $('div#map').css('width','100%');
-      var pos = $('div#map').position();
-      var height = $(window).height() - pos.top;
-        $('div#map').css('height','250px');
+                        if ($(window).width() < 768) {
+                            $('div#container').css('width', ($(window).width() + 'px'));
+                        } else {
+                            $('div#container').css('width', ($(window).width() - $('div.sidebar').width()) + 'px');
+                        }
 
-   /*  if(height < 250)
+                        $('div#container').width();
+                        $('div#map').css('width', '100%');
+                        var pos = $('div#map').position();
+                        var height = $(window).height() - pos.top;
+                        $('div#map').css('height', '250px');
 
-  else $('div#map').css('height',height + 'px');
-     */ 
-},1000); 
+                    }, 1000);
 
                     foreCast($scope.selectedCity);
                     $("div#map").css('visibility', 'visible');
