@@ -104,20 +104,17 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
                     trigger: function() {
                         if ($('.olControlButtonItemActive').hasClass('glyphicon-fullscreen')) {
                             $('.olControlButtonItemActive').removeClass('glyphicon-fullscreen').addClass('glyphicon-resize-small');
-                            $('div#selectedDay').css('display', 'none');
                             $('div#map').css('position', 'absolute');
                             $('div#map').css('height', '100%');
-                            if ($window.width() > 768)
+                            if ($(window).width() > 768)
                                 $('div#map').css('left', '200px');
                             else $('div#map').css('left', '0px');
                             $('div#map').css('top', '0px');
                             var width = $('div#container').width();
                             $('div#map').width(width);
                         } else {
-                            $('div#selectedDay').css('display', 'block');
-                            //$('div#container').css('display', 'block');
-                            $('div#map').css('position', 'static');
-                            $('div#map').css('height', '256px');
+                             $('div#map').css('position', 'static');
+                            $('div#map').css('height', '250px');
                             $('div#map').css('width', '100%');
 
                             $('.olControlButtonItemActive').removeClass('glyphicon-resize-small').addClass('glyphicon-fullscreen');

@@ -170,9 +170,7 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
                     $rootScope.isSidebar = true;
                     $rootScope.isMessage = false;
                     $('div#map').css('visibility', 'visible');
-         /* console.log('element size is');
-           console.log(setElementsSize);        
-         */          setElementsSize(city);
+                setElementsSize(city);
 
                     foreCast(scope.selectedCity);
                 });
