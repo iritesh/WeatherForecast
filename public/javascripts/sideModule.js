@@ -167,8 +167,6 @@ $('div#container').css('width',($(window).width()+'px'));}
       $('div#map').css('height','250px');
   else $('div#map').css('height',height + 'px');
       
-      
-
 },1000); 
                     
                     $timeout(function() {
@@ -244,7 +242,7 @@ $('div#container').css('width',($(window).width()+'px'));}
 ]);
 
 myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http','$timeout', 'CreateCityService','GetForecastService','GetForecastService',
-    function($rootScope, $scope, $http, $timeout,createCity,foreCast) {
+'$window',    function($rootScope, $scope, $http, $timeout,createCity,foreCast,$window) {
 
         $scope.getLocations = function(val) {
             return $http.get(FIND_CITY_URL, {
@@ -347,7 +345,31 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http','$timeout'
                     selCityScope.bgColor={};
                     selCityScope.bgColor['background-color'] = '#FFA500';
                     },1000); 
-                
+                $timeout(function(){
+    console.log('window width is');
+    console.log($(window).width());
+    console.log($('.sidebar').width());
+            var w = angular.element($window);
+console.log(w.width());
+
+if($(window).width() < 768){
+$('div#container').css('width',($(window).width()+'px'));}
+      else {
+        $('div#container').css('width',($(window).width() - $('div.sidebar').width())+'px');
+      }
+      console.log('width is');
+      
+      console.log($('div#container').width());
+      $('div#container').width();  
+      $('div#map').css('width','100%');
+      var pos = $('div#map').position();
+      var height = $(document).height() - pos.top;
+     if(height < 250)
+      $('div#map').css('height','250px');
+  else $('div#map').css('height',height + 'px');
+      
+},1000); 
+
                     foreCast($scope.selectedCity);
                     $("div#map").css('visibility', 'visible');
                 }

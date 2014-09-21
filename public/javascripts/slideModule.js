@@ -45,6 +45,7 @@ $('div#map').css('width','100%');
 
 }
        $timeout(function(){
+
          if (scope.forecasts.length > 0 && ($('div#forecast-data').width() < ($('div#forecast-data li').width() * 14)))            
             { //console.log('coming in enablement');
                 //console.log('coming here again');
@@ -53,7 +54,7 @@ $('div#map').css('width','100%');
             }else evtHandler.set({enable : false});
 
 
-        },1000);
+        },5000);
        
          });
 
