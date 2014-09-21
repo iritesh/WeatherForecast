@@ -35,13 +35,13 @@ myApp.directive('slideHandler', ['$interval', '$timeout','$window',
 //$('div#map').css('width','0px');
     }
     else { 
-$timeout(function(){
+/*$timeout(function(){
      $('div#container').css('width','100%');
     //$('div#container').css('margin-left','0px');
 
 $('div#map').css('width','100%');
 },5000);
-    
+  */  
 
 }
        $timeout(function(){
