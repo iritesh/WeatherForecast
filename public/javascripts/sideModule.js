@@ -150,6 +150,7 @@ $timeout(function(){
     console.log($('.sidebar').width());
             var w = angular.element($window);
 console.log(w.width());
+
 $('div#container').css('width',($(window).width()-$('.sidebar').width())+'px');
       console.log('width is');
       console.log($('div#container').width());
@@ -161,7 +162,7 @@ $('div#container').css('width',($(window).width()-$('.sidebar').width())+'px');
       $('div#map').css('height','250px');
   else $('div#map').css('height',height + 'px');
       
-},1000);
+},3000);
                     
                     $timeout(function() {
                        var selCityScope =  angular.element($('li.hover-effect')[0]).scope();

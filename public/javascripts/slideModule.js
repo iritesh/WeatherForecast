@@ -40,7 +40,7 @@ $timeout(function(){
     //$('div#container').css('margin-left','0px');
 
 $('div#map').css('width','100%');
-},1000);
+},5000);
     
 
 }
