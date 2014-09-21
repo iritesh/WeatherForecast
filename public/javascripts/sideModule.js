@@ -49,7 +49,7 @@ myApp.factory("GeolocationService", ['$q', '$window', '$rootScope',
 
 myApp.factory('ProcessResponseService', function() {
     return function(res) {
-        console.log(res);
+     //   console.log(res);
         for (var i = 0; i < res.data.list.length; i++) {
             res.data.list[i].temp.min = parseInt(res.data.list[i].temp.min - 273.15);
             res.data.list[i].temp.max = parseInt(res.data.list[i].temp.max - 273.15);
@@ -146,10 +146,10 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
                     $('div#map').css('visibility', 'visible');
 $timeout(function(){
     console.log('window width is');
-    console.log($(window).width());
+  //  console.log($(window).width());
     console.log($('.sidebar').width());
             var w = angular.element($window);
-console.log(w.width());
+//console.log(w.width());
 
 if($(window).width() < 768){
 $('div#container').css('width',($(window).width()+'px'));}
@@ -213,9 +213,9 @@ $('div#container').css('width',($(window).width()+'px'));}
             scope.cityClickHandler = function() {
                
                 var ulSidebar = $('.sidebar ul');
-                console.log('city is');
+                // console.log('city is');
 
-                console.log($('li[cityid="' + scope.selectedCity.Id + '"]', ulSidebar));
+               // console.log($('li[cityid="' + scope.selectedCity.Id + '"]', ulSidebar));
                var selCityScope = angular.element($('li[cityid="' + scope.selectedCity.Id + '"]', ulSidebar)[0]).scope();
               
                 selCityScope.bgColor = {};
@@ -224,8 +224,8 @@ $('div#container').css('width',($(window).width()+'px'));}
                 foreCast(currCity);
 
                selCityScope = angular.element($('li[cityid="' + currCity.Id + '"]', ulSidebar)[0]).scope();
-               console.log('selCityScope is');
-               console.log(selCityScope); 
+               // console.log('selCityScope is');
+               //  console.log(selCityScope); 
                selCityScope.bgColor = {};
                selCityScope.bgColor['background-color'] = '#FFA500';
      
@@ -340,27 +340,27 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http','$timeout'
                      $timeout(function(){
                         
                     var selCityScope = angular.element( $('li.hover-effect[cityid='+city.Id+']')[0]).scope();
-                     console.log('selected city scope is');
-                    console.log(selCityScope);
+                    // console.log('selected city scope is');
+                    //console.log(selCityScope);
 
                     selCityScope.bgColor={};
                     selCityScope.bgColor['background-color'] = '#FFA500';
                     },1000); 
                 $timeout(function(){
-    console.log('window width is');
-    console.log($(window).width());
-    console.log($('.sidebar').width());
+ //   console.log('window width is');
+   // console.log($(window).width());
+   // console.log($('.sidebar').width());
             var w = angular.element($window);
-console.log(w.width());
+//console.log(w.width());
 
 if($(window).width() < 768){
 $('div#container').css('width',($(window).width()+'px'));}
       else {
         $('div#container').css('width',($(window).width() - $('div.sidebar').width())+'px');
       }
-      console.log('width is');
+    //  console.log('width is');
       
-      console.log($('div#container').width());
+  //    console.log($('div#container').width());
       $('div#container').width();  
       $('div#map').css('width','100%');
       var pos = $('div#map').position();
