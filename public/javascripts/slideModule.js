@@ -1,7 +1,7 @@
 var myApp = angular.module('SlideModule', ['ui.bootstrap']);
 
-myApp.directive('slideHandler', ['$interval', '$timeout',
-    function($interval, $timeout) {
+myApp.directive('slideHandler', ['$interval', '$timeout','$window',
+    function($interval, $timeout,$window) {
         return {
             restrict: 'A',
             link: function(scope, ele, attrs) {
@@ -17,6 +17,41 @@ myApp.directive('slideHandler', ['$interval', '$timeout',
                         }
                     },
                     500);
+        var w = angular.element($window);
+
+
+        scope.$watch(function(){
+            return w.width();
+        },function(){
+    //console.log((scope.forecasts.length>0));
+    if(w.width() > 768)
+    {
+           // console.log('coming here');
+     
+      $('div.sidebar').css('left','0px');
+
+      $('div#container').css('width',($(window).width()-$('div.sidebar').width())+'px');
+      $('div#map').css('width','100%');
+//$('div#map').css('width','0px');
+    }
+    else {  $('div#container').css('width','100%');
+    //$('div#container').css('margin-left','0px');
+
+$('div#map').css('width','100%');
+
+}
+       $timeout(function(){
+         if (scope.forecasts.length > 0 && ($('div#forecast-data').width() < ($('div#forecast-data li').width() * 14)))            
+            { //console.log('coming in enablement');
+                //console.log('coming here again');
+                evtHandler.set({enable :true});
+
+            }else evtHandler.set({enable : false});
+
+
+        },1000);
+       
+         });
 
                 var isHover = false;
 
@@ -34,21 +69,22 @@ myApp.directive('slideHandler', ['$interval', '$timeout',
                 };
 
                 scope.showForecasts = function() {
+
                     if (scope.forecasts.length > 0)
                         return true;
                     else return false;
+                
                 };
 
                 scope.$watch('forecasts', function() {
 
                     $timeout(function() {
 
-                        if (scope.forecasts.length > 0 && ($('div#forecast-data').width() < ($('div#forecast-data li').width() * 14))) {
                             evtHandler.on('pan', function(event) {
                                 var dayList = $('div#forecast-data li');
                                 dayList.css('left', event.deltaX + left + 'px');
-                                for (var i = 0; i < listItems.length; i++) {
-                                    var dayScope = angular.element(listItems[i]).scope();
+                                for (var i = 0; i < dayList.length; i++) {
+                                    var dayScope = angular.element(dayList[i]).scope();
                                     dayScope.zoom1 = '100%';
 
                                 }
@@ -80,7 +116,7 @@ myApp.directive('slideHandler', ['$interval', '$timeout',
 
                                 dayList.css('left', left + 'px');
                             });
-                        }
+                        
 
                     }, 1000);
                 });

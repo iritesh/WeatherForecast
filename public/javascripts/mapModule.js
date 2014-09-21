@@ -78,6 +78,12 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
 
             var markers = new OpenLayers.Layer.Markers("Markers");
             map.addLayers([stations, markers]);
+            var e = angular.element($('div#map')[0]);
+            scope.$watch( function(){
+                return e.height();
+            }, function(){
+map.updateSize();
+            });
 
             sideScope.$watch('selectedCity', function() {
 
@@ -88,7 +94,7 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
                         myNode.removeChild(myNode.firstChild);
                 }
 
-                $('div#map').append("<a class='glyphicon.glyphicon-fullscreen' style='position:absolute;left:0px;top:0px;' href='#'></a>");
+                $('div#map').append("<a class='glyphicon.glyphicon-fullscreen' href='#'></a>");
                 
                 var selectedCity = sideScope.selectedCity;
                
@@ -103,12 +109,12 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
                             $('div#container-fluid').css('display', 'none');
                             $('div#map').css('position', 'absolute');
                             $('div#map').css('height', '100%');
-                            $('div#map').css('width', ($('div.container-fluid').width()) - 10);
+                            $('div#map').css('width', ($('div.container-fluid').width()) );
                         } else {
                             $('div#selectedDay').css('display', 'block');
                             $('div#container-fluid').css('display', 'block');
                             $('div#map').css('position', 'static');
-                            $('div#map').css('height', '256px');
+                           // $('div#map').css('height', '256px');
 
                             $('.olControlButtonItemActive').removeClass('glyphicon-resize-small').addClass('glyphicon-fullscreen');
 

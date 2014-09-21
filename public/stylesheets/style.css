@@ -32,17 +32,20 @@ div.ps-scrollbar-y{
 a {
   color: #00B7FF;
 }
+
 .scroller {
                 overflow-y: hidden;
                 position: relative;
-            }
+}
 
 .main {
 
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
   text-align: left;
   -moz-box-sizing: content-box;
-  box-sizing: content-box; }
+  box-sizing: content-box; 
+
+}
 
 .sidebar {
 
@@ -55,6 +58,7 @@ a {
     left: 0px;
     height:100%;
     overflow: hidden;
+    z-index: 10;
 
 }
 
@@ -127,17 +131,17 @@ color:#000000;
  * Map Examples Specific
  */
 .smallmap {
-    height: 256px;
+
     border: 1px solid #ccc;
 }
 
 div#container {
 
-margin-left : 205px;
+margin-left : 200px;
+padding : 0px;
+margin-right :0px;
 
 }
-
-
 
 body {
     -webkit-text-size-adjust: none;
@@ -163,10 +167,21 @@ body {
     right: 0px;
 }
 
-@media only screen and (max-width: 768px)
+table.table td{
+   border: 0px !important;
+}
+
+@media only screen and (max-width: 768px){
   div#container {
 
   margin-left : 0px;
+
+}
+
+div#forecast-data{
+  margin-left : 35px;
+
+}
 
 }
 

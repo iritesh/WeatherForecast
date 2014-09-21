@@ -95,8 +95,8 @@ myApp.factory('GetForecastService',['$http','ProcessResponseService',function($h
                         cnt: '14'
                     }
                 }).then(function(res) {
-                    fScope.forecasts = processRes(res);
 
+                    fScope.forecasts = processRes(res);
                     fScope.selectedDay = fScope.forecasts[0];
                     fScope.permSelectedDay = fScope.forecasts[0];
 
@@ -106,8 +106,8 @@ myApp.factory('GetForecastService',['$http','ProcessResponseService',function($h
 }]);
 
 myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
-    '$timeout', 'ProcessResponseService', 'CreateCityService','GetForecastService',
-    function($http, $rootScope, GeolocationService, $timeout, processRes, createCity,foreCast) {
+    '$timeout', 'ProcessResponseService', 'CreateCityService','GetForecastService','$window',
+    function($http, $rootScope, GeolocationService, $timeout, processRes, createCity,foreCast,$window) {
         return function(scope, element, attrs) {
 
             scope.cities = [];
@@ -144,6 +144,25 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
                     $rootScope.isSidebar = true;
                     $rootScope.isMessage = false;
                     $('div#map').css('visibility', 'visible');
+$timeout(function(){
+    console.log('window width is');
+    console.log($(window).width());
+    console.log($('.sidebar').width());
+            var w = angular.element($window);
+console.log(w.width());
+$('div#container').css('width',($(window).width()-$('.sidebar').width())+'px');
+      console.log('width is');
+      console.log($('div#container').width());
+      $('div#container').width();  
+      $('div#map').css('width',+'100%');
+      var pos = $('div#map').position();
+      var height = $(document).height() - pos.top;
+     if(height < 250)
+      $('div#map').css('height','250px');
+  else $('div#map').css('height',height + 'px');
+      
+},1000);
+                    
                     $timeout(function() {
                        var selCityScope =  angular.element($('li.hover-effect')[0]).scope();
                     selCityScope.bgColor={};
