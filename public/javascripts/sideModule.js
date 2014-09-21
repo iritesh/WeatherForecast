@@ -156,9 +156,9 @@ $('div#container').css('width',($(window).width()+'px'));}
       else {
         $('div#container').css('width',($(window).width() - $('div.sidebar').width())+'px');
       }
-      console.log('width is');
+    //  console.log('width is');
       
-      console.log($('div#container').width());
+     // console.log($('div#container').width());
       $('div#container').width();  
       $('div#map').css('width','100%');
       var pos = $('div#map').position();
