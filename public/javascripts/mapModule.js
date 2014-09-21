@@ -106,10 +106,11 @@ map.updateSize();
                         if ($('.olControlButtonItemActive').hasClass('glyphicon-fullscreen')) {
                             $('.olControlButtonItemActive').removeClass('glyphicon-fullscreen').addClass('glyphicon-resize-small');
                             $('div#selectedDay').css('display', 'none');
-                       //     $('div#container').css('display', 'none');
                             $('div#map').css('position', 'absolute');
                             $('div#map').css('height', '100%');
+                            if($window.width() > 768)
                             $('div#map').css('left','200px');
+                        else $('div#map').css('left','0px');
                             $('div#map').css('top','0px');
                   var width = $('div#container').width();
                  // console.log('width is');
