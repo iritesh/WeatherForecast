@@ -163,7 +163,8 @@ $('div#container').css('width',($(window).width()+'px'));}
       $('div#map').css('width','100%');
       var pos = $('div#map').position();
       var height = $(window).height() - pos.top;
-
+console.log('height is');
+console.log(height);
      if(height < 250)
         $('div#map').css('height','250px');
   else $('div#map').css('height',height + 'px');
