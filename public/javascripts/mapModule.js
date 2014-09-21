@@ -1,10 +1,14 @@
 var myApp = angular.module('MapModule', []);
+/*
+directive for creating map and handling map
+*/
 myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout) {
     return {
         restrict: 'A',
         link: function(scope, ele, attrs, ctrl) {
 
             var sideScope = angular.element($("div.sidebar")[0]).scope();
+            //creating openlayer map
             var map = new OpenLayers.Map('map', {
                 projection: 'EPSG:3857',
                 layers: [
@@ -34,7 +38,7 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
                 ],
                 zoom: 10
             });
-
+            // style for weather station layer map
             var styleMap = new OpenLayers.Style({
                 fontColor: "black",
                 fontSize: "14px",
@@ -50,7 +54,12 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
             }, {
                 context: {
                     icon: function(feature) {
-
+                        /*for creating icon to represent weather condition reported by weather station.
+                        here is a little immaturity in apis.in condition they are not giving numeric number instead providing 
+                        a short notation in English alphabet.which word refer to which condition i didn't fund in apis docs
+                        because its a sample app thats why i am providing icons for normal weather conditions.but temp is
+                        correct icon may be or may not be correct.
+                        */
                         if (!feature.attributes.station.clouds)
                             return "http://openweathermap.org/img/w/01d.png";
 
@@ -71,11 +80,11 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
                     }
                 }
             });
-
+            //creating weather stations layer
             var stations = new OpenLayers.Layer.Vector.OWMStations("Stations", {
                 styleMap: styleMap
             });
-
+            //adding marker layer
             var markers = new OpenLayers.Layer.Markers("Markers");
             map.addLayers([stations, markers]);
             var e = angular.element($('div#map')[0]);
@@ -89,7 +98,7 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
 
                 if ($('.olForeignContainer').length > 0) {
                     var myNode = $('div#map')[0];
-
+                    //removing previous map and adding new 
                     while (myNode.firstChild)
                         myNode.removeChild(myNode.firstChild);
                 }
@@ -97,7 +106,7 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
                 $('div#map').append("<a class='glyphicon.glyphicon-fullscreen' href='#'></a>");
 
                 var selectedCity = sideScope.selectedCity;
-
+                //button for making screen full screen and revert back;
                 var button = new OpenLayers.Control.Button({
                     autoActivate: true,
                     displayClass: "olControlButton",
@@ -113,7 +122,7 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
                             var width = $('div#container').width();
                             $('div#map').width(width);
                         } else {
-                             $('div#map').css('position', 'static');
+                            $('div#map').css('position', 'static');
                             $('div#map').css('height', '250px');
                             $('div#map').css('width', '100%');
 
@@ -138,7 +147,7 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
 
                 $('.olControlButtonItemActive').addClass('glyphicon glyphicon-fullscreen');
                 markers.clearMarkers();
-
+                //set center of map
                 map.setCenter(new OpenLayers.LonLat(sideScope.selectedCity.lon, sideScope.selectedCity.lat)
                     // Google.v3 uses web mercator as p
                     .transform(

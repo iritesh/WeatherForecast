@@ -1,7 +1,10 @@
 var FIND_CITY_URL = 'http://api.openweathermap.org/data/2.5/find';
-angular.module('Weather', ['SideModule','SlideModule','MapModule']);
+angular.module('Weather', ['SideModule', 'SlideModule', 'MapModule']);
 var myApp = angular.module('SideModule', ['ngAnimate']);
 
+/*a directive when a user presses enter it calls a function provided in 
+directive declaration
+*/
 myApp.directive('ngEnter', function() {
     return function(scope, element, attrs) {
         element.bind("keydown keypress", function(event) {
@@ -16,11 +19,15 @@ myApp.directive('ngEnter', function() {
     };
 });
 
+/*a service for providing Current Geolocation
+
+*/
 myApp.factory("GeolocationService", ['$q', '$window', '$rootScope',
     function($q, $window, $rootScope) {
         return function() {
             var deferred = $q.defer();
 
+            //if browser doesn't support navigator api
             if (!$window.navigator) {
 
                 $rootScope.$apply(function() {
@@ -37,7 +44,8 @@ myApp.factory("GeolocationService", ['$q', '$window', '$rootScope',
                         deferred.reject(error);
                     });
                 }, {
-                    enableHighAccuracy: true
+                    enableHighAccuracy: true,
+                    timeout: 5000
                 });
             }
 
@@ -46,6 +54,10 @@ myApp.factory("GeolocationService", ['$q', '$window', '$rootScope',
     }
 ]);
 
+/*A service which do some changes in res get from openWeatherMap api
+1.Changing temperature in to celcius from Kelvein
+2.adding date attribute in desired format.
+*/
 myApp.factory('ProcessResponseService', function() {
     return function(res) {
         for (var i = 0; i < res.data.list.length; i++) {
@@ -66,6 +78,8 @@ myApp.factory('ProcessResponseService', function() {
     }
 });
 
+/* creating a city object.adding desired attributes
+ */
 myApp.factory('CreateCityService', function() {
     return function(newCity) {
         var city = {};
@@ -78,6 +92,10 @@ myApp.factory('CreateCityService', function() {
     }
 });
 
+/*
+Getting forecast data and updating it in desired scope of selectedDay div 
+element.
+*/
 myApp.factory('GetForecastService', ['$http', 'ProcessResponseService',
     function($http, processRes) {
         return function(city) {
@@ -105,48 +123,66 @@ myApp.factory('GetForecastService', ['$http', 'ProcessResponseService',
     }
 ]);
 
-myApp.factory('SetElementsSizeService',['$timeout','$window',function($timeout,$window){
-return function(city){
+/*for first time when we add an element all elements should render according to 
+browsers windows size
+*/
+myApp.factory('SetElementsSizeService', ['$timeout', '$window',
+    function($timeout, $window) {
+        return function(city) {
+            /*timeout is used because window windth changes when we before and after 
+            addition of city.so let it be stable thatss why i used timeout
+            */
+            $timeout(function() {
 
-                 $timeout(function() {
+                var selCityScope = angular.element($('li.hover-effect[cityid=' + city.Id + ']')[0]).scope();
+                selCityScope.bgColor = {};
+                selCityScope.bgColor['background-color'] = '#FFA500';
+                var w = angular.element($window);
 
-                        var selCityScope = angular.element($('li.hover-effect[cityid=' + city.Id + ']')[0]).scope();
-                        selCityScope.bgColor = {};
-                        selCityScope.bgColor['background-color'] = '#FFA500';
-                        var w = angular.element($window);
+                if (w.width() < 768) {
+                    $('div#container').css('width', (w.width() + 'px'));
+                } else {
+                    $('div#container').css('width', (w.width() - $('div.sidebar').width()) + 'px');
+                }
 
-                        if (w.width() < 768) {
-                            $('div#container').css('width', (w.width() + 'px'));
-                        } else {
-                            $('div#container').css('width', (w.width() - $('div.sidebar').width()) + 'px');
-                        }
-                        
-                        $('div#map').width($('div#container').width());
-                        $('div#map').css('height', '250px');
+                $('div#map').width($('div#container').width());
+                $('div#map').css('height', '250px');
 
-                    }, 1000); 
+            }, 1000);
 
-};
-}]);
+        };
+    }
+]);
 
+/* this directive contains all the functionality
+related to sidebar except last row
+*/
 myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
     '$timeout', 'ProcessResponseService', 'CreateCityService', 'GetForecastService', '$window',
     'SetElementsSizeService',
-    function($http, $rootScope, GeolocationService, $timeout, processRes, createCity, foreCast, $window,setElementsSize) {
+    function($http, $rootScope, GeolocationService, $timeout, processRes, createCity, foreCast, $window, setElementsSize) {
         return function(scope, element, attrs) {
-
+            //cities in side bar
             scope.cities = [];
+            // selectedCity
             scope.selectedCity = {};
+            /*boolean variables for checking whether to show 
+             or not sidebar  */
             $rootScope.isMessage = true;
             $rootScope.isSidebar = false;
+            //due to visibility-xs-inline display is used with important!
+            //thats why when sidebar become visible it should also become 
+            //visible
+
             var clear = $rootScope.$watch('isSidebar', function() {
                 if ($rootScope.isSidebar) {
                     $('button#sidebutton').css('visibility', 'visible');
                     clear();
                 }
             });
-            var ulSidebar = $('.sidebar ul');
 
+            var ulSidebar = $('.sidebar ul');
+            //for creating scrollbar in sidebar 
             $('div.sidebar').perfectScrollbar({
                 suppressScrollX: true
             });
@@ -169,7 +205,7 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
                     $rootScope.isSidebar = true;
                     $rootScope.isMessage = false;
                     $('div#map').css('visibility', 'visible');
-                setElementsSize(city);
+                    setElementsSize(city);
 
                     foreCast(scope.selectedCity);
                 });
@@ -204,6 +240,7 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
 
             };
 
+            /*function get called when any city is clicked*/
             scope.cityClickHandler = function() {
 
                 var ulSidebar = $('.sidebar ul');
@@ -219,7 +256,7 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
                 selCityScope.bgColor['background-color'] = '#FFA500';
 
             };
-
+            /*when cross icon get clicked*/
             scope.crossHandler = function() {
                 for (var i = 0; i < scope.cities.length; i++)
                     if (scope.cities[i] == this.city)
@@ -231,10 +268,11 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
     }
 ]);
 
+/*for handling last row of sidebar*/
 myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout', 'CreateCityService', 'GetForecastService', 'GetForecastService',
-    '$window','SetElementsSizeService',
-    function($rootScope, $scope, $http, $timeout, createCity, foreCast, $window,setElementsSize) {
-
+    '$window', 'SetElementsSizeService',
+    function($rootScope, $scope, $http, $timeout, createCity, foreCast, $window, setElementsSize) {
+        /*for showing autocomplete suggestions*/
         $scope.getLocations = function(val) {
             return $http.get(FIND_CITY_URL, {
                 params: {
@@ -250,7 +288,7 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout
 
             });
         };
-
+        /*when enter is clicked for adding city this function get called*/
         $scope.addCity = function() {
             var city = {};
             var cityPresent = false;
@@ -289,6 +327,7 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout
 
         };
 
+        /*when plus glyphicon get clicked*/
         $scope.clickPlus = function() {
             $('a.glyphicon-plus').css('display', 'none');
             $('span#addLabel').css('display', 'none');
@@ -296,11 +335,14 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout
             $('a.glyphicon-remove').css('display', 'inline');
 
         };
-
+        /*when any autocomplete suggestion is selected from drop down list
+        this function get called */
         $scope.selectionFunc = function(item) {
             $scope.selection = item;
         };
 
+        /* function for checking if city is preciously added or not.
+         */
         function checkForDuplicate(city) {
             for (var i = 0; i < $scope.cities.length; i++) {
                 if ($scope.cities[i].Id == city.Id) {
@@ -311,6 +353,7 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout
             return true;
         };
 
+        /* when remove icon near to input box get clicked*/
         $scope.removeInput = function() {
             $('input#locInput').css('display', 'none');
             $('a.glyphicon-remove').css('display', 'none');
@@ -320,6 +363,7 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout
 
         };
 
+        /*function for handling city insertion*/
         function checkAndInsertCity(newCity) {
             var city = {};
             if (checkForDuplicate(newCity)) {
@@ -327,7 +371,7 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout
                 $scope.cities.push(city);
                 if ($scope.cities.length == 1) {
                     $scope.$parent.selectedCity = $scope.cities[0];
-                     setElementsSize($scope.cities[0]);
+                    setElementsSize($scope.cities[0]);
 
                     foreCast($scope.selectedCity);
                     $("div#map").css('visibility', 'visible');
