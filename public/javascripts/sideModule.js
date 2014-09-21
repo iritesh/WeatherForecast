@@ -146,7 +146,7 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
                     $('div#map').css('visibility', 'visible');
 $timeout(function(){
     console.log('window width is');
-  //  console.log($(window).width());
+    console.log($(window).width());
     console.log($('.sidebar').width());
             var w = angular.element($window);
 //console.log(w.width());
