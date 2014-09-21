@@ -49,7 +49,7 @@ $('div#map').width($('div#container').width());
             }else {evtHandler.set({enable : false});
       $('div#forecast-data li').css('left','0px');
 
-}
+      }
 
         },1000);
        
@@ -118,7 +118,11 @@ $('div#map').width($('div#container').width());
 
                                 dayList.css('left', left + 'px');
                             });
-                        
+if (scope.forecasts.length > 0 && ($('div#forecast-data').width() < ($('div#forecast-data li').width() * 14)))            
+            { 
+                evtHandler.set({enable :true});
+
+            }                        
 
                     }, 1000);
                 });

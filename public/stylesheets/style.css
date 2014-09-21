@@ -127,9 +127,6 @@ color:#000000;
     bottom: 5px;
 }
 
-/**
- * Map Examples Specific
- */
 .smallmap {
 
     border: 1px solid #ccc;
@@ -184,8 +181,3 @@ div#forecast-data{
 }
 
 }
-
-/*
-@media only screen and (max-width: 500px) and (min-resolution : 200dpi)
-
-@media only screen and (max-width: 500px) and (min-resolution : 150dpi)*/

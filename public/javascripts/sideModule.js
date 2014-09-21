@@ -120,8 +120,7 @@ return function(city){
                         } else {
                             $('div#container').css('width', (w.width() - $('div.sidebar').width()) + 'px');
                         }
-
-                        $('div#container').width();
+                        
                         $('div#map').width($('div#container').width());
                         $('div#map').css('height', '250px');
 
