@@ -152,7 +152,7 @@ $timeout(function(){
 console.log(w.width());
 
 if($(window).width() < 768){
-$('div#container').css('width',($(window).width()+'px');
+$('div#container').css('width',($(window).width()+'px'));}
       else {
         $('div#container').css('width',($(window).width() - $('div.sidebar').width())+'px');
       }
