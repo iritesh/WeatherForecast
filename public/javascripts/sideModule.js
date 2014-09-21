@@ -163,10 +163,11 @@ $('div#container').css('width',($(window).width()+'px'));}
       $('div#map').css('width','100%');
       var pos = $('div#map').position();
       var height = $(document).height() - pos.top;
-     if(height < 250)
-      $('div#map').css('height','250px');
+          $('div#map').css('height','250px');
+
+     /*if(height < 250)
   else $('div#map').css('height',height + 'px');
-      
+   */   
 },1000); 
                     
                     $timeout(function() {
@@ -364,10 +365,11 @@ $('div#container').css('width',($(window).width()+'px'));}
       $('div#map').css('width','100%');
       var pos = $('div#map').position();
       var height = $(document).height() - pos.top;
-     if(height < 250)
-      $('div#map').css('height','250px');
+         $('div#map').css('height','250px');
+
+    /* if(height < 250)
   else $('div#map').css('height',height + 'px');
-      
+      */
 },1000); 
 
                     foreCast($scope.selectedCity);
