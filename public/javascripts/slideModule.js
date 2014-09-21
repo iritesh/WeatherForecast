@@ -31,13 +31,13 @@ myApp.directive('slideHandler', ['$interval', '$timeout','$window',
       $('div.sidebar').css('left','0px');
 
       $('div#container').css('width',($(window).width()-$('div.sidebar').width())+'px');
-      $('div#map').css('width','100%');
+      $('div#map').width($('div#container').width());
 //$('div#map').css('width','0px');
     }
     else { 
 $timeout(function(){
-     $('div#container').css('width','100%');
-    //$('div#container').css('margin-left','0px');
+     $('div#container').css('width',$('div#container').width()+'px');
+    $('div#container').css('margin-left','0px');
 
 $('div#map').css('width','100%');
 },1000);

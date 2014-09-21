@@ -102,19 +102,25 @@ map.updateSize();
                     autoActivate: true,
                     displayClass: "olControlButton",
                     trigger: function() {
-                       // console.log('coming here');
+                        console.log('coming here');
                         if ($('.olControlButtonItemActive').hasClass('glyphicon-fullscreen')) {
                             $('.olControlButtonItemActive').removeClass('glyphicon-fullscreen').addClass('glyphicon-resize-small');
                             $('div#selectedDay').css('display', 'none');
-                            $('div#container-fluid').css('display', 'none');
+                       //     $('div#container').css('display', 'none');
                             $('div#map').css('position', 'absolute');
                             $('div#map').css('height', '100%');
-                            $('div#map').css('width', ($('div.container-fluid').width()) );
+                            $('div#map').css('left','200px');
+                            $('div#map').css('top','0px');
+                  var width = $('div#container').width();
+                 // console.log('width is');
+                 // console.log(width);
+                            $('div#map').width( width );
                         } else {
                             $('div#selectedDay').css('display', 'block');
-                            $('div#container-fluid').css('display', 'block');
+                            //$('div#container').css('display', 'block');
                             $('div#map').css('position', 'static');
-                           // $('div#map').css('height', '256px');
+                            $('div#map').css('height', '256px');
+                            $('div#map').css('width','100%');
 
                             $('.olControlButtonItemActive').removeClass('glyphicon-resize-small').addClass('glyphicon-fullscreen');
 
@@ -122,7 +128,7 @@ map.updateSize();
 
 
                         $timeout(function() {
-                            map.updateSize();
+                           map.updateSize();
 
                         }, 1000);
                     }
