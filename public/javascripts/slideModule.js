@@ -30,13 +30,11 @@ myApp.directive('slideHandler', ['$interval', '$timeout','$window',
       $('div#container').css('width',($(window).width()-$('div.sidebar').width())+'px');
       $('div#map').width($('div#container').width());
 
-//$('div#map').css('width','0px');
     }
     else { 
 $timeout(function(){
 
      $('div#container').css('width','100%');
-   // $('div#container').css('margin-left','0px');
 
 $('div#map').width($('div#container').width());
 },1000);

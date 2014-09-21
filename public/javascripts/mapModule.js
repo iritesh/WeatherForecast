@@ -79,10 +79,10 @@ myApp.directive('mapDirective', function($http, $rootScope, $interval, $timeout)
             var markers = new OpenLayers.Layer.Markers("Markers");
             map.addLayers([stations, markers]);
             var e = angular.element($('div#map')[0]);
-            scope.$watch( function(){
+            scope.$watch(function() {
                 return e.height();
-            }, function(){
-map.updateSize();
+            }, function() {
+                map.updateSize();
             });
 
             sideScope.$watch('selectedCity', function() {
@@ -95,9 +95,9 @@ map.updateSize();
                 }
 
                 $('div#map').append("<a class='glyphicon.glyphicon-fullscreen' href='#'></a>");
-                
+
                 var selectedCity = sideScope.selectedCity;
-               
+
                 var button = new OpenLayers.Control.Button({
                     autoActivate: true,
                     displayClass: "olControlButton",
@@ -107,18 +107,18 @@ map.updateSize();
                             $('div#selectedDay').css('display', 'none');
                             $('div#map').css('position', 'absolute');
                             $('div#map').css('height', '100%');
-                            if($window.width() > 768)
-                            $('div#map').css('left','200px');
-                        else $('div#map').css('left','0px');
-                            $('div#map').css('top','0px');
-                  var width = $('div#container').width();
-                            $('div#map').width( width );
+                            if ($window.width() > 768)
+                                $('div#map').css('left', '200px');
+                            else $('div#map').css('left', '0px');
+                            $('div#map').css('top', '0px');
+                            var width = $('div#container').width();
+                            $('div#map').width(width);
                         } else {
                             $('div#selectedDay').css('display', 'block');
                             //$('div#container').css('display', 'block');
                             $('div#map').css('position', 'static');
                             $('div#map').css('height', '256px');
-                            $('div#map').css('width','100%');
+                            $('div#map').css('width', '100%');
 
                             $('.olControlButtonItemActive').removeClass('glyphicon-resize-small').addClass('glyphicon-fullscreen');
 
@@ -126,7 +126,7 @@ map.updateSize();
 
 
                         $timeout(function() {
-                           map.updateSize();
+                            map.updateSize();
 
                         }, 1000);
                     }

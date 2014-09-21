@@ -1,4 +1,5 @@
 var FIND_CITY_URL = 'http://api.openweathermap.org/data/2.5/find';
+angular.module('Weather', ['SideModule','SlideModule','MapModule']);
 var myApp = angular.module('SideModule', ['ngAnimate']);
 
 myApp.directive('ngEnter', function() {
@@ -104,9 +105,35 @@ myApp.factory('GetForecastService', ['$http', 'ProcessResponseService',
     }
 ]);
 
+myApp.factory('SetElementsSizeService',['$timeout','$window',function($timeout,$window){
+return function(city){
+
+                 $timeout(function() {
+
+                        var selCityScope = angular.element($('li.hover-effect[cityid=' + city.Id + ']')[0]).scope();
+                        selCityScope.bgColor = {};
+                        selCityScope.bgColor['background-color'] = '#FFA500';
+                        var w = angular.element($window);
+
+                        if (w.width() < 768) {
+                            $('div#container').css('width', (w.width() + 'px'));
+                        } else {
+                            $('div#container').css('width', (w.width() - $('div.sidebar').width()) + 'px');
+                        }
+
+                        $('div#container').width();
+                        $('div#map').width($('div#container').width());
+                        $('div#map').css('height', '250px');
+
+                    }, 1000); 
+
+};
+}]);
+
 myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
     '$timeout', 'ProcessResponseService', 'CreateCityService', 'GetForecastService', '$window',
-    function($http, $rootScope, GeolocationService, $timeout, processRes, createCity, foreCast, $window) {
+    'SetElementsSizeService',
+    function($http, $rootScope, GeolocationService, $timeout, processRes, createCity, foreCast, $window,setElementsSize) {
         return function(scope, element, attrs) {
 
             scope.cities = [];
@@ -143,27 +170,11 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
                     $rootScope.isSidebar = true;
                     $rootScope.isMessage = false;
                     $('div#map').css('visibility', 'visible');
-                    $timeout(function() {
-                        var w = angular.element($window);
-
-                        if (w.width() < 768) {
-                            $('div#container').css('width', ($(window).width() + 'px'));
-                        } else {
-                            $('div#container').css('width', ($(window).width() - $('div.sidebar').width()) + 'px');
-                        }
-                
-                        $('div#map').width($('div#container').width());
-                        var pos = $('div#map').position();
-                        $('div#map').css('height', '250px');
-                    var selCityScope = angular.element($('li.hover-effect')[0]).scope();
-                        selCityScope.bgColor = {};
-                        selCityScope.bgColor['background-color'] = '#FFA500';
-                 
-
-                    }, 1000);
+         /* console.log('element size is');
+           console.log(setElementsSize);        
+         */          setElementsSize(city);
 
                     foreCast(scope.selectedCity);
-
                 });
             }, function(reason) {
 
@@ -224,8 +235,8 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
 ]);
 
 myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout', 'CreateCityService', 'GetForecastService', 'GetForecastService',
-    '$window',
-    function($rootScope, $scope, $http, $timeout, createCity, foreCast, $window) {
+    '$window','SetElementsSizeService',
+    function($rootScope, $scope, $http, $timeout, createCity, foreCast, $window,setElementsSize) {
 
         $scope.getLocations = function(val) {
             return $http.get(FIND_CITY_URL, {
@@ -319,31 +330,7 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout
                 $scope.cities.push(city);
                 if ($scope.cities.length == 1) {
                     $scope.$parent.selectedCity = $scope.cities[0];
-                    $timeout(function() {
-
-                        var selCityScope = angular.element($('li.hover-effect[cityid=' + city.Id + ']')[0]).scope();
-                        
-
-                        selCityScope.bgColor = {};
-                        selCityScope.bgColor['background-color'] = '#FFA500';
-                    }, 1000);
-                    $timeout(function() {
-                    
-                        var w = angular.element($window);
-
-                        if ($(window).width() < 768) {
-                            $('div#container').css('width', ($(window).width() + 'px'));
-                        } else {
-                            $('div#container').css('width', ($(window).width() - $('div.sidebar').width()) + 'px');
-                        }
-
-                        $('div#container').width();
-                        $('div#map').css('width', '100%');
-                        var pos = $('div#map').position();
-                        var height = $(window).height() - pos.top;
-                        $('div#map').css('height', '250px');
-
-                    }, 1000);
+                     setElementsSize($scope.cities[0]);
 
                     foreCast($scope.selectedCity);
                     $("div#map").css('visibility', 'visible');

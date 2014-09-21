@@ -18,7 +18,7 @@ block content
           span#notAvail(style='display:none;') {{message}}
           span#addLabel Add New City
     button(id='sidebutton',ng-class='class',style='display:inline;visibility:hidden;background-color:#FF8300;outline:none;border:0px;position:fixed;left:200px;top:0px;width:30px;height:30px;z-index:10;',class='glyphicon glyphicon-chevron-left visible-xs-inline',ng-click='clickHandler1()',ng-show='isSidebar')
-    div#container.container-fluid(slide-handler)
+    div#container(slide-handler)
       div#forecast-data(style='overflow:hidden;clear:both;',ng-show='showForecasts()')
         ul(style='list-style-type:none;margin:0;padding:0;width:25000px',ng-mouseleave='releaseHandler()')
           li(ng-repeat="location in forecasts",ng-mouseover="dayHoverHandler(location);",ng-mouseleave="dayLeaveHandler();",style='position:relative;left:0px;float:left;') 
@@ -73,4 +73,5 @@ block content
             tr
               td(style='float:right;') Wind
               td {{selectedDay.speed}}&nbsp;Km/hr
-      div#map.smallmap(style='float:left;position:static;visibility:hidden;',map-directive)              
+      div#map.smallmap(style='float:left;position:static;visibility:hidden;',map-directive)
+                      
