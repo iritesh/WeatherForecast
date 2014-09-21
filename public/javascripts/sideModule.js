@@ -345,7 +345,7 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout
          */
         function checkForDuplicate(city) {
             for (var i = 0; i < $scope.cities.length; i++) {
-                if ($scope.cities[i].Id == city.Id) {
+                if ($scope.cities[i].Id == city.id) {
                     return false;
 
                 }
