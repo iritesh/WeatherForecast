@@ -144,7 +144,7 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
                     $rootScope.isSidebar = true;
                     $rootScope.isMessage = false;
                     $('div#map').css('visibility', 'visible');
-$timeout(function(){
+/*$timeout(function(){
     console.log('window width is');
     console.log($(window).width());
     console.log($('.sidebar').width());
@@ -162,7 +162,7 @@ $('div#container').css('width',($(window).width()-$('.sidebar').width())+'px');
       $('div#map').css('height','250px');
   else $('div#map').css('height',height + 'px');
       
-},3000);
+},3000); */
                     
                     $timeout(function() {
                        var selCityScope =  angular.element($('li.hover-effect')[0]).scope();
