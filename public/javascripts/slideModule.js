@@ -42,7 +42,6 @@ $timeout(function(){
 $('div#map').css('width','100%');
 },1000);
     
-
 }
        $timeout(function(){
 
