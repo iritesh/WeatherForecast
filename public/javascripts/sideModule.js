@@ -45,7 +45,7 @@ myApp.factory("GeolocationService", ['$q', '$window', '$rootScope',
                     });
                 }, {
                     enableHighAccuracy: true,
-                    timeout: 5000
+                    timeout: 10000
                 });
             }
 
@@ -269,7 +269,7 @@ myApp.directive('sidebarHandler', ['$http', '$rootScope', 'GeolocationService',
 ]);
 
 /*for handling last row of sidebar*/
-myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout', 'CreateCityService', 'GetForecastService', 'GetForecastService',
+myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout', 'CreateCityService', 'GetForecastService',
     '$window', 'SetElementsSizeService',
     function($rootScope, $scope, $http, $timeout, createCity, foreCast, $window, setElementsSize) {
         /*for showing autocomplete suggestions*/
@@ -313,7 +313,6 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout
 
             if (!cityPresent)
                 $scope.message = 'Location Not available';
-
             if (!city.city)
                 $('span#notAvail').css('display', 'inline');
             else {
@@ -325,6 +324,24 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout
                 $('a.glyphicon-remove').css('display', 'none');
             }
 
+        };
+
+         /*function for handling city insertion*/
+        function checkAndInsertCity(newCity) {
+            var city = {};
+            if (checkForDuplicate(newCity)) {
+                city = createCity(newCity);
+                $scope.cities.push(city);
+                if ($scope.cities.length == 1) {
+                    $scope.$parent.selectedCity = $scope.cities[0];
+                    setElementsSize($scope.cities[0]);
+
+                    foreCast($scope.selectedCity);
+                    $("div#map").css('visibility', 'visible');
+                }
+            } else $scope.message = 'Location already in the list';
+
+            return city;
         };
 
         /*when plus glyphicon get clicked*/
@@ -363,22 +380,6 @@ myApp.controller('manageCitiesCont', ['$rootScope', '$scope', '$http', '$timeout
 
         };
 
-        /*function for handling city insertion*/
-        function checkAndInsertCity(newCity) {
-            var city = {};
-            if (checkForDuplicate(newCity)) {
-                city = createCity(newCity);
-                $scope.cities.push(city);
-                if ($scope.cities.length == 1) {
-                    $scope.$parent.selectedCity = $scope.cities[0];
-                    setElementsSize($scope.cities[0]);
-
-                    foreCast($scope.selectedCity);
-                    $("div#map").css('visibility', 'visible');
-                }
-            } else $scope.message = 'Location already in the list';
-
-            return city;
-        };
+       
     }
 ]);
